@@ -1,0 +1,58 @@
+name: ncl-platform
+
+services:
+  engine:
+    # Rasterio's pinned Python 3.12 manylinux wheel is published for amd64.
+    # Apple Silicon development uses Colima/Docker's registered amd64 emulator.
+    platform: linux/amd64
+    build:
+      context: .
+      dockerfile: Dockerfile.engine
+      target: runtime
+    cap_drop: [ALL]
+    environment:
+      NCL_FIXTURE_SET: ncl-showcase
+      NCL_FIXTURES_DIR: /app/fixtures
+      NCL_MODE: replay
+      NCL_STATE_DIR: /var/lib/ncl
+      TZ: UTC
+    healthcheck:
+      test: [CMD, python, -m, ncl_engine.healthcheck]
+      interval: 2s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+    networks: [ncl-internal]
+    read_only: true
+    security_opt: [no-new-privileges:true]
+    tmpfs: [/tmp]
+    volumes:
+      - ./fixtures:/app/fixtures:ro
+      - ncl-state:/var/lib/ncl
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+      target: runtime
+      args:
+        VITE_NCL_TEST: ${VITE_NCL_TEST:-0}
+    cap_drop: [ALL]
+    depends_on:
+      engine:
+        condition: service_healthy
+    networks: [edge, ncl-internal]
+    ports: ["4173:8080"]
+    read_only: true
+    security_opt: [no-new-privileges:true]
+    tmpfs: [/tmp, /var/cache/nginx, /var/run]
+
+networks:
+  edge:
+    driver: bridge
+  ncl-internal:
+    driver: bridge
+    internal: true
+
+volumes:
+  ncl-state:

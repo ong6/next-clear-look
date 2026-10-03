@@ -1,0 +1,9 @@
+{
+  "error": {
+    "code": "LIVE_DISABLED",
+    "details": {},
+    "message": "Set NCL_ALLOW_LIVE=1 before switching to live mode.",
+    "request_id": "req_01d2e7d96cf4",
+    "retryable": false
+  }
+}

@@ -1,0 +1,43 @@
+id: job_f5f0c6d7b318:1
+event: job.accepted
+data: {"clock_time":"2026-10-03T00:00:00Z","data":{"aoi_id":"aoi_sg_tuas_coast","job_type":"full_analysis","queue_position":0,"scene_id":null},"emitted_at":"2026-10-03T00:00:00Z","id":"job_f5f0c6d7b318:1","job_id":"job_f5f0c6d7b318","mode":"replay","schema_version":"1.0","sequence":1,"stream":"job","type":"job.accepted"}
+
+id: job_f5f0c6d7b318:2
+event: job.started
+data: {"clock_time":"2026-10-03T00:00:00Z","data":{"aoi_id":"aoi_sg_tuas_coast","job_type":"full_analysis","scene_id":null},"emitted_at":"2026-10-03T00:00:00Z","id":"job_f5f0c6d7b318:2","job_id":"job_f5f0c6d7b318","mode":"replay","schema_version":"1.0","sequence":2,"stream":"job","type":"job.started"}
+
+id: job_f5f0c6d7b318:3
+event: job.cancellation_requested
+data: {"clock_time":"2026-10-03T00:00:00Z","data":{"requested_at":"2026-10-03T00:00:00Z"},"emitted_at":"2026-10-03T00:00:00Z","id":"job_f5f0c6d7b318:3","job_id":"job_f5f0c6d7b318","mode":"replay","schema_version":"1.0","sequence":3,"stream":"job","type":"job.cancellation_requested"}
+
+id: job_f5f0c6d7b318:4
+event: job.stage.started
+data: {"clock_time":"2026-10-03T00:00:00Z","data":{"message":"Predicting Sentinel-2 geometric opportunities.","stage":"orbit","total_units":3},"emitted_at":"2026-10-03T00:00:00Z","id":"job_f5f0c6d7b318:4","job_id":"job_f5f0c6d7b318","mode":"replay","schema_version":"1.0","sequence":4,"stream":"job","type":"job.stage.started"}
+
+id: job_f5f0c6d7b318:5
+event: job.progress
+data: {"clock_time":"2026-10-03T00:00:00Z","data":{"completed_units":1,"message":"Computed AOI statistics for 1 of 3 scenes.","overall_progress":0.55,"stage":"raster","stage_progress":0.3333,"total_units":3},"emitted_at":"2026-10-03T00:00:00Z","id":"job_f5f0c6d7b318:5","job_id":"job_f5f0c6d7b318","mode":"replay","schema_version":"1.0","sequence":5,"stream":"job","type":"job.progress"}
+
+id: job_f5f0c6d7b318:6
+event: job.result
+data: {"clock_time":"2026-10-03T00:00:00Z","data":{"provenance_id":"prv_opp_ef8b898f1dfb","resource":{"acquisition_status":"unknown","aoi_id":"aoi_sg_tuas_coast","aoi_sun_elevation_deg":53.82,"caveat":"Geometric opportunity only; acquisition is not guaranteed.","closest_subpoint":{"altitude_m":786122.4,"latitude":1.01,"longitude":103.78},"closest_time":"2026-10-03T02:32:07.250000Z","direction":"descending","duration_seconds":94.35,"element_age_seconds":36009.666896,"entry_time":"2026-10-03T02:31:20.100000Z","exit_time":"2026-10-03T02:32:54.450000Z","id":"opp_ef8b898f1dfb","illumination":"daylight","kind":"geometric_opportunity","matched_scene_id":null,"minimum_ground_track_distance_km":37.41,"platform":"sentinel-2c","provenance_id":"prv_opp_ef8b898f1dfb","satellite_id":"sentinel-2c","satellite_sunlit":true,"source":{"coarse_step_seconds":20,"crossing_tolerance_seconds":0.05,"omm_epoch":"2026-10-02T16:31:57.583104Z","omm_sha256":"7368f1805ce51fdd4acb5a1226ce40465d22a2589967c4e555ac243492abf844","propagation_model":"SGP4"},"swath_footprint":{"coordinates":[[[102.35,-0.25],[105.03,-0.25],[105.03,2.85],[102.35,2.85],[102.35,-0.25]]],"type":"Polygon"},"swath_width_km":290.0,"truncated":false},"resource_url":"/v1/aois/aoi_sg_tuas_coast/opportunities","result_type":"opportunity"},"emitted_at":"2026-10-03T00:00:00Z","id":"job_f5f0c6d7b318:6","job_id":"job_f5f0c6d7b318","mode":"replay","schema_version":"1.0","sequence":6,"stream":"job","type":"job.result"}
+
+id: job_f5f0c6d7b318:7
+event: job.warning
+data: {"clock_time":"2026-10-03T00:00:00Z","data":{"code":"STALE_OMM","details":{"age_seconds":90000},"message":"Using cached orbital elements beyond the preferred age.","retryable":false},"emitted_at":"2026-10-03T00:00:00Z","id":"job_f5f0c6d7b318:7","job_id":"job_f5f0c6d7b318","mode":"replay","schema_version":"1.0","sequence":7,"stream":"job","type":"job.warning"}
+
+id: job_f5f0c6d7b318:8
+event: job.stage.completed
+data: {"clock_time":"2026-10-03T00:00:00Z","data":{"completed_units":3,"duration_seconds":6.42,"stage":"raster","total_units":3},"emitted_at":"2026-10-03T00:00:00Z","id":"job_f5f0c6d7b318:8","job_id":"job_f5f0c6d7b318","mode":"replay","schema_version":"1.0","sequence":8,"stream":"job","type":"job.stage.completed"}
+
+id: job_f5f0c6d7b318:9
+event: job.completed
+data: {"clock_time":"2026-10-03T00:00:00Z","data":{"likelihood_url":"/v1/aois/aoi_sg_tuas_coast/likelihood","opportunity_count":5,"partial_failure_count":0,"scene_count":3},"emitted_at":"2026-10-03T00:00:00Z","id":"job_f5f0c6d7b318:9","job_id":"job_f5f0c6d7b318","mode":"replay","schema_version":"1.0","sequence":9,"stream":"job","type":"job.completed"}
+
+id: job_f5f0c6d7b318:10
+event: job.failed
+data: {"clock_time":"2026-10-03T00:00:00Z","data":{"error":{"code":"UPSTREAM_UNAVAILABLE","details":{},"message":"Earth Search is unavailable.","request_id":"req_01d2e7d96cf4","retryable":true},"partial_result_urls":["/v1/aois/aoi_sg_tuas_coast/opportunities"]},"emitted_at":"2026-10-03T00:00:00Z","id":"job_f5f0c6d7b318:10","job_id":"job_f5f0c6d7b318","mode":"replay","schema_version":"1.0","sequence":10,"stream":"job","type":"job.failed"}
+
+id: job_f5f0c6d7b318:11
+event: job.cancelled
+data: {"clock_time":"2026-10-03T00:00:00Z","data":{"cancelled_at":"2026-10-03T00:00:00Z","partial_result_urls":[],"reason":"Cancelled by client."},"emitted_at":"2026-10-03T00:00:00Z","id":"job_f5f0c6d7b318:11","job_id":"job_f5f0c6d7b318","mode":"replay","schema_version":"1.0","sequence":11,"stream":"job","type":"job.cancelled"}

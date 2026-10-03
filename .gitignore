@@ -1,0 +1,30 @@
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+.coverage
+.coverage.*
+.hypothesis/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+htmlcov/
+
+# JavaScript and browser reports
+node_modules/
+playwright-report/
+test-results/
+coverage/
+dist/
+
+# Runtime state and local processes
+.local/
+*.pid
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+
+# Editors and operating systems
+.DS_Store
+.idea/
+.vscode/

@@ -1,0 +1,110 @@
+{
+  "$id": "https://next-clear-look.local/schemas/fixture-set-v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "blob": {
+      "additionalProperties": false,
+      "properties": {
+        "media_type": {"minLength": 1, "type": "string"},
+        "path": {"pattern": "^sha256/[0-9a-f]{2}/[0-9a-f]{64}$", "type": "string"},
+        "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+        "size": {"minimum": 0, "type": "integer"}
+      },
+      "required": ["sha256", "size", "path", "media_type"],
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "budget": {
+      "additionalProperties": false,
+      "properties": {
+        "catalogue_json_bytes": {"minimum": 0, "type": "integer"},
+        "derived_png_bytes": {"minimum": 0, "type": "integer"},
+        "examples_goldens_sse_bytes": {"minimum": 0, "type": "integer"},
+        "limit_bytes": {"const": 41943040},
+        "orbital_ephemeris_bytes": {"maximum": 524288, "minimum": 0, "type": "integer"},
+        "raw_scl_range_bytes": {"minimum": 0, "type": "integer"},
+        "unique_referenced_bytes": {"minimum": 0, "type": "integer"}
+      },
+      "required": [
+        "limit_bytes",
+        "unique_referenced_bytes",
+        "orbital_ephemeris_bytes",
+        "catalogue_json_bytes",
+        "raw_scl_range_bytes",
+        "derived_png_bytes",
+        "examples_goldens_sse_bytes"
+      ],
+      "type": "object"
+    },
+    "fixture_set": {"const": "ncl-showcase"},
+    "frozen_at": {"format": "date-time", "type": ["string", "null"]},
+    "interactions": {"items": {"type": "object"}, "type": "array"},
+    "presets": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "aoi": {"pattern": "^presets/[-a-z0-9]+/aoi\\.geojson$", "type": "string"},
+          "manifest": {
+            "oneOf": [
+              {"pattern": "^presets/[-a-z0-9]+/manifest\\.json$", "type": "string"},
+              {"type": "null"}
+            ]
+          },
+          "slug": {"pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$", "type": "string"}
+        },
+        "required": ["slug", "aoi", "manifest"],
+        "type": "object"
+      },
+      "maxItems": 5,
+      "minItems": 5,
+      "type": "array"
+    },
+    "recorded_at": {"format": "date-time", "type": ["string", "null"]},
+    "schema": {"const": "ncl-fixture-set/v1"},
+    "sources": {
+      "additionalProperties": false,
+      "properties": {
+        "celestrak": {
+          "oneOf": [
+            {"$ref": "#/$defs/blob"},
+            {"type": "null"}
+          ]
+        },
+        "ephemeris": {
+          "additionalProperties": false,
+          "properties": {
+            "body": {"$ref": "#/$defs/blob"},
+            "coverage": {"const": "2023-01-01/2027-12-31"},
+            "provenance": {"type": "object"},
+            "source_id": {"const": "jpl-de421"},
+            "targets": {
+              "items": {"enum": [3, 5, 6, 10, 399], "type": "integer"},
+              "minItems": 5,
+              "type": "array",
+              "uniqueItems": true
+            }
+          },
+          "required": ["source_id", "coverage", "targets", "body"],
+          "type": "object"
+        }
+      },
+      "required": ["celestrak", "ephemeris"],
+      "type": "object"
+    },
+    "status": {"enum": ["pending-recording", "ready"]}
+  },
+  "required": [
+    "schema",
+    "fixture_set",
+    "status",
+    "frozen_at",
+    "recorded_at",
+    "interactions",
+    "sources",
+    "presets",
+    "budget"
+  ],
+  "type": "object"
+}

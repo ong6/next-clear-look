@@ -1,0 +1,2 @@
+# Recorded bodies are byte-exact evidence. Never normalize line endings or render text diffs.
+fixtures/blobs/** -text -diff

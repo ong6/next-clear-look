@@ -1,0 +1,254 @@
+{
+  "cancelAnalysisJob": {
+    "responses": [
+      {
+        "file": "analysis-job-cancelling.json",
+        "status": 202
+      }
+    ]
+  },
+  "createAnalysisJob": {
+    "request": "analysis-job-create.json",
+    "responses": [
+      {
+        "file": "analysis-job.json",
+        "status": 202
+      }
+    ]
+  },
+  "createAoi": {
+    "request": "aoi-create.json",
+    "responses": [
+      {
+        "file": "aoi.json",
+        "status": 201
+      }
+    ]
+  },
+  "deleteAoi": {
+    "responses": [
+      {
+        "file": null,
+        "status": 204
+      }
+    ]
+  },
+  "getAnalysisJob": {
+    "responses": [
+      {
+        "file": "analysis-job-completed.json",
+        "status": 200
+      }
+    ]
+  },
+  "getAoi": {
+    "responses": [
+      {
+        "file": "aoi.json",
+        "status": 200
+      }
+    ]
+  },
+  "getHealth": {
+    "responses": [
+      {
+        "file": "health.json",
+        "status": 200
+      },
+      {
+        "file": "error.json",
+        "status": 503
+      }
+    ]
+  },
+  "getLikelihood": {
+    "responses": [
+      {
+        "file": "likelihood.json",
+        "status": 200
+      },
+      {
+        "file": "likelihood-insufficient.json",
+        "status": 200
+      },
+      {
+        "file": "analysis-job.json",
+        "status": 202
+      }
+    ]
+  },
+  "getMode": {
+    "responses": [
+      {
+        "file": "mode-replay.json",
+        "status": 200
+      },
+      {
+        "file": "mode-live.json",
+        "status": 200
+      }
+    ]
+  },
+  "getProvenance": {
+    "responses": [
+      {
+        "file": "provenance.json",
+        "status": 200
+      }
+    ]
+  },
+  "getSatellite": {
+    "responses": [
+      {
+        "file": "satellite.json",
+        "status": 200
+      }
+    ]
+  },
+  "getScene": {
+    "responses": [
+      {
+        "file": "scene.json",
+        "status": 200
+      }
+    ]
+  },
+  "getSceneStatistics": {
+    "responses": [
+      {
+        "file": "scene-statistics.json",
+        "status": 200
+      },
+      {
+        "file": "analysis-job.json",
+        "status": 202
+      }
+    ]
+  },
+  "getSceneThumbnail": {
+    "responses": [
+      {
+        "file": "thumbnail.png",
+        "status": 200
+      },
+      {
+        "file": "analysis-job.json",
+        "status": 202
+      }
+    ]
+  },
+  "getSceneThumbnailMetadata": {
+    "responses": [
+      {
+        "file": "thumbnail-metadata.json",
+        "status": 200
+      }
+    ]
+  },
+  "getTrajectory": {
+    "responses": [
+      {
+        "file": "trajectory.json",
+        "status": 200
+      }
+    ]
+  },
+  "listAnalysisJobs": {
+    "responses": [
+      {
+        "file": "analysis-jobs.json",
+        "status": 200
+      }
+    ]
+  },
+  "listAois": {
+    "responses": [
+      {
+        "file": "aoi-page.json",
+        "status": 200
+      }
+    ]
+  },
+  "listAttributions": {
+    "responses": [
+      {
+        "file": "attributions.json",
+        "status": 200
+      }
+    ]
+  },
+  "listOpportunities": {
+    "responses": [
+      {
+        "file": "opportunities.json",
+        "status": 200
+      },
+      {
+        "file": "analysis-job.json",
+        "status": 202
+      }
+    ]
+  },
+  "listSatellites": {
+    "responses": [
+      {
+        "file": "satellites.json",
+        "status": 200
+      }
+    ]
+  },
+  "listScenes": {
+    "responses": [
+      {
+        "file": "scenes.json",
+        "status": 200
+      },
+      {
+        "file": "scenes-empty.json",
+        "status": 200
+      },
+      {
+        "file": "analysis-job.json",
+        "status": 202
+      }
+    ]
+  },
+  "streamAnalysisJobEvents": {
+    "responses": [
+      {
+        "file": "job-events.sse",
+        "status": 200
+      }
+    ]
+  },
+  "streamLiveEvents": {
+    "responses": [
+      {
+        "file": "live-events.sse",
+        "status": 200
+      }
+    ]
+  },
+  "switchMode": {
+    "request": "mode-switch-live.json",
+    "responses": [
+      {
+        "file": "mode-live.json",
+        "status": 200
+      },
+      {
+        "file": "error-live-disabled.json",
+        "status": 409
+      }
+    ]
+  },
+  "updateAoi": {
+    "request": "aoi-patch.json",
+    "responses": [
+      {
+        "file": "aoi.json",
+        "status": 200
+      }
+    ]
+  }
+}

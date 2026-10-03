@@ -1,0 +1,24 @@
+{
+  "bbox": [-68.42, -23.72, -68.22, -23.5],
+  "geometry": {
+    "coordinates": [
+      [
+        [-68.42, -23.72],
+        [-68.22, -23.72],
+        [-68.22, -23.5],
+        [-68.42, -23.5],
+        [-68.42, -23.72]
+      ]
+    ],
+    "type": "Polygon"
+  },
+  "id": "aoi_cl_salar_atacama_works",
+  "properties": {
+    "climate_tags": ["arid", "high-altitude", "snow-class-honesty"],
+    "locality": "Antofagasta Region, Chile",
+    "name": "Salar de Atacama works",
+    "slug": "atacama-works",
+    "story": "Evaporation ponds and mine infrastructure create strong colour and geometry patterns."
+  },
+  "type": "Feature"
+}

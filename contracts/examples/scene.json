@@ -1,0 +1,49 @@
+{
+  "acquisition_time": "2026-10-01T03:19:11.406000Z",
+  "analysis_error": null,
+  "analysis_state": "ready",
+  "aoi_clear_percent": 69.9007,
+  "aoi_coverage_percent": 100.0,
+  "assets": {
+    "scl": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/48/N/UG/2026/10/S2C_48NUG_20261001_0_L2A/SCL.tif",
+    "visual": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/48/N/UG/2026/10/S2C_48NUG_20261001_0_L2A/TCI.tif"
+  },
+  "collection": "sentinel-2-l2a",
+  "footprint": {
+    "coordinates": [
+      [
+        [
+          103.078,
+          0.813
+        ],
+        [
+          104.066,
+          0.813
+        ],
+        [
+          104.066,
+          1.808
+        ],
+        [
+          103.078,
+          1.808
+        ],
+        [
+          103.078,
+          0.813
+        ]
+      ]
+    ],
+    "type": "Polygon"
+  },
+  "id": "S2C_48NUG_20261001_0_L2A",
+  "platform": "sentinel-2c",
+  "provenance_id": "prv_scene_s2c_20261001",
+  "stac_self_url": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2C_48NUG_20261001_0_L2A",
+  "statistics_url": "/v1/scenes/S2C_48NUG_20261001_0_L2A/statistics/aoi_sg_tuas_coast",
+  "thumbnail_status": "ready",
+  "thumbnail_url": "/v1/scenes/S2C_48NUG_20261001_0_L2A/thumbnails/aoi_sg_tuas_coast",
+  "tile": "48NUG",
+  "tile_cloud_cover_percent": 37.938815,
+  "valid_pixels": 548603
+}

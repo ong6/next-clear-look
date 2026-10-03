@@ -1,0 +1,62 @@
+{
+  "$id": "https://next-clear-look.local/schemas/events/job.result.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "allOf": [
+    {
+      "$ref": "envelope.schema.json"
+    },
+    {
+      "properties": {
+        "data": {
+          "additionalProperties": false,
+          "properties": {
+            "provenance_id": {
+              "type": "string"
+            },
+            "resource": {
+              "type": [
+                "object",
+                "null"
+              ]
+            },
+            "resource_url": {
+              "type": "string"
+            },
+            "result_type": {
+              "enum": [
+                "trajectory",
+                "opportunity",
+                "scene",
+                "scene_statistics",
+                "thumbnail_metadata",
+                "likelihood",
+                "provenance"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "result_type",
+            "resource_url",
+            "resource",
+            "provenance_id"
+          ],
+          "type": "object"
+        },
+        "stream": {
+          "const": "job"
+        },
+        "type": {
+          "const": "job.result"
+        }
+      },
+      "required": [
+        "type",
+        "stream",
+        "data"
+      ],
+      "type": "object"
+    }
+  ],
+  "title": "Next Clear Look job.result event"
+}

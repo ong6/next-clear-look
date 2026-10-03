@@ -1,0 +1,62 @@
+{
+  "$id": "https://next-clear-look.local/schemas/events/live.mode.changed.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "allOf": [
+    {
+      "$ref": "envelope.schema.json"
+    },
+    {
+      "properties": {
+        "data": {
+          "additionalProperties": false,
+          "properties": {
+            "current_mode": {
+              "enum": [
+                "live",
+                "replay"
+              ],
+              "type": "string"
+            },
+            "effective_clock": {
+              "format": "date-time",
+              "type": "string"
+            },
+            "fixture_set": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "previous_mode": {
+              "enum": [
+                "live",
+                "replay"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "previous_mode",
+            "current_mode",
+            "fixture_set",
+            "effective_clock"
+          ],
+          "type": "object"
+        },
+        "stream": {
+          "const": "live"
+        },
+        "type": {
+          "const": "live.mode.changed"
+        }
+      },
+      "required": [
+        "type",
+        "stream",
+        "data"
+      ],
+      "type": "object"
+    }
+  ],
+  "title": "Next Clear Look live.mode.changed event"
+}

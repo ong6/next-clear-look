@@ -1,0 +1,64 @@
+{
+  "$id": "https://next-clear-look.local/schemas/events/job.accepted.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "allOf": [
+    {
+      "$ref": "envelope.schema.json"
+    },
+    {
+      "properties": {
+        "data": {
+          "additionalProperties": false,
+          "properties": {
+            "aoi_id": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "job_type": {
+              "enum": [
+                "full_analysis",
+                "orbit_only",
+                "archive_refresh",
+                "raster_scene",
+                "likelihood_only"
+              ],
+              "type": "string"
+            },
+            "queue_position": {
+              "minimum": 0,
+              "type": "integer"
+            },
+            "scene_id": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "job_type",
+            "aoi_id",
+            "scene_id",
+            "queue_position"
+          ],
+          "type": "object"
+        },
+        "stream": {
+          "const": "job"
+        },
+        "type": {
+          "const": "job.accepted"
+        }
+      },
+      "required": [
+        "type",
+        "stream",
+        "data"
+      ],
+      "type": "object"
+    }
+  ],
+  "title": "Next Clear Look job.accepted event"
+}

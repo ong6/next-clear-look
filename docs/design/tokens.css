@@ -1,0 +1,156 @@
+/* Next Clear Look — canonical design tokens */
+
+:root {
+  color-scheme: dark;
+
+  /* Type */
+  --font-sans: "IBM Plex Sans", "Helvetica Neue", "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --text-display-size: 2.625rem;
+  --text-display-line: 2.75rem;
+  --text-display-mobile-size: 2.125rem;
+  --text-display-mobile-line: 2.375rem;
+  --text-title-size: 1.5rem;
+  --text-title-line: 1.875rem;
+  --text-section-size: 1rem;
+  --text-section-line: 1.375rem;
+  --text-body-size: 0.875rem;
+  --text-body-line: 1.25rem;
+  --text-compact-size: 0.75rem;
+  --text-compact-line: 1rem;
+  --text-eyebrow-size: 0.625rem;
+  --text-eyebrow-line: 0.875rem;
+  --text-mono-size: 0.8125rem;
+  --text-mono-line: 1.125rem;
+  --text-micro-size: 0.625rem;
+  --text-micro-line: 0.875rem;
+
+  /* Foundations */
+  --night-950: #050b14;
+  --orbit-900: #07111f;
+  --orbit-850: #091727;
+  --orbit-800: #0d1c2e;
+  --orbit-750: #12243a;
+  --orbit-700: #172b43;
+  --rule-700: #1c3147;
+  --rule-600: #294159;
+  --frost-050: #edf6f8;
+  --frost-200: #b7cbd4;
+  --frost-400: #829aa8;
+
+  /* Semantic colors */
+  --opportunity: #ffb45b;
+  --opportunity-strong: #ffd39a;
+  --opportunity-dim: rgba(255, 180, 91, 0.18);
+  --evidence: #48d8e8;
+  --evidence-strong: #a5f3f7;
+  --evidence-dim: rgba(72, 216, 232, 0.16);
+  --clear: #56d4c5;
+  --mixed: #f3b966;
+  --obscured: #d28ac7;
+  --unknown: #778d9e;
+  --error: #ff8a82;
+  --stale: #c8a6ff;
+  --focus-ring: #c4f5ff;
+
+  /* Text and surfaces */
+  --text-primary: var(--frost-050);
+  --text-secondary: var(--frost-200);
+  --text-muted: var(--frost-400);
+  --surface-canvas: var(--orbit-900);
+  --surface-panel: var(--orbit-800);
+  --surface-panel-glass: rgba(9, 23, 39, 0.92);
+  --surface-raised: var(--orbit-750);
+  --surface-control: var(--orbit-700);
+  --surface-scrim: rgba(2, 8, 16, 0.76);
+  --surface-image-label: rgba(5, 11, 20, 0.84);
+  --border-subtle: var(--rule-700);
+  --border-strong: var(--rule-600);
+
+  /* Spacing */
+  --space-0: 0;
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+
+  /* Shape */
+  --radius-1: 0.125rem;
+  --radius-2: 0.375rem;
+  --radius-3: 0.625rem;
+  --radius-sheet: 1rem;
+  --radius-pill: 999px;
+  --rule-width: 1px;
+
+  /* Sizing */
+  --header-height: 3.75rem;
+  --header-height-mobile: 3.5rem;
+  --aoi-rail-width: 18rem;
+  --outlook-rail-width: 21.5rem;
+  --observation-deck-height: 11.5rem;
+  --drawer-width: 29rem;
+  --touch-target: 2.75rem;
+  --control-height: 2.25rem;
+  --control-height-primary: 3rem;
+
+  /* Elevation */
+  --shadow-1: 0 0.375rem 1.125rem rgba(0, 0, 0, 0.22);
+  --shadow-2: 0 1.125rem 3.5rem rgba(0, 0, 0, 0.42);
+  --shadow-3: 0 1.5rem 5rem rgba(0, 0, 0, 0.55);
+  --inner-highlight: inset 0 1px rgba(237, 246, 248, 0.06);
+
+  /* Motion */
+  --duration-instant: 90ms;
+  --duration-fast: 160ms;
+  --duration-standard: 240ms;
+  --duration-deliberate: 420ms;
+  --duration-scene: 800ms;
+  --duration-camera: 3200ms;
+  --ease-ui: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-camera: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Patterns */
+  --pattern-clear: repeating-linear-gradient(
+    45deg,
+    rgba(86, 212, 197, 0.92) 0 2px,
+    rgba(86, 212, 197, 0.24) 2px 6px
+  );
+  --pattern-mixed: radial-gradient(circle at 2px 2px, rgba(243, 185, 102, 0.92) 1.2px, rgba(243, 185, 102, 0.2) 1.3px);
+  --pattern-obscured: repeating-linear-gradient(
+    135deg,
+    rgba(210, 138, 199, 0.9) 0 1px,
+    rgba(210, 138, 199, 0.18) 1px 5px
+  );
+  --pattern-unknown: repeating-linear-gradient(
+    90deg,
+    rgba(119, 141, 158, 0.56) 0 4px,
+    rgba(119, 141, 158, 0.12) 4px 8px
+  );
+}
+
+@media (max-width: 720px) {
+  :root {
+    --text-display-size: var(--text-display-mobile-size);
+    --text-display-line: var(--text-display-mobile-line);
+    --duration-camera: 2200ms;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-instant: 1ms;
+    --duration-fast: 1ms;
+    --duration-standard: 1ms;
+    --duration-deliberate: 1ms;
+    --duration-scene: 120ms;
+    --duration-camera: 120ms;
+  }
+}

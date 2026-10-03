@@ -1,0 +1,98 @@
+{
+  "$id": "https://next-clear-look.local/schemas/events/live.satellite_positions.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "allOf": [
+    {
+      "$ref": "envelope.schema.json"
+    },
+    {
+      "properties": {
+        "data": {
+          "additionalProperties": false,
+          "properties": {
+            "positions": {
+              "items": {
+                "additionalProperties": false,
+                "properties": {
+                  "altitude_m": {
+                    "minimum": 0,
+                    "type": "number"
+                  },
+                  "latitude": {
+                    "maximum": 90,
+                    "minimum": -90,
+                    "type": "number"
+                  },
+                  "longitude": {
+                    "maximum": 180,
+                    "minimum": -180,
+                    "type": "number"
+                  },
+                  "satellite_id": {
+                    "type": "string"
+                  },
+                  "swath_left": {
+                    "items": false,
+                    "prefixItems": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "number"
+                      }
+                    ],
+                    "type": "array"
+                  },
+                  "swath_right": {
+                    "items": false,
+                    "prefixItems": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "number"
+                      }
+                    ],
+                    "type": "array"
+                  },
+                  "time": {
+                    "format": "date-time",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "satellite_id",
+                  "time",
+                  "latitude",
+                  "longitude",
+                  "altitude_m",
+                  "swath_left",
+                  "swath_right"
+                ],
+                "type": "object"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "positions"
+          ],
+          "type": "object"
+        },
+        "stream": {
+          "const": "live"
+        },
+        "type": {
+          "const": "live.satellite_positions"
+        }
+      },
+      "required": [
+        "type",
+        "stream",
+        "data"
+      ],
+      "type": "object"
+    }
+  ],
+  "title": "Next Clear Look live.satellite_positions event"
+}

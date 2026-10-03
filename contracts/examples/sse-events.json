@@ -1,0 +1,409 @@
+[
+  {
+    "clock_time": "2026-10-03T00:00:00Z",
+    "data": {
+      "aoi_id": "aoi_sg_tuas_coast",
+      "job_type": "full_analysis",
+      "queue_position": 0,
+      "scene_id": null
+    },
+    "emitted_at": "2026-10-03T00:00:00Z",
+    "id": "job_f5f0c6d7b318:1",
+    "job_id": "job_f5f0c6d7b318",
+    "mode": "replay",
+    "schema_version": "1.0",
+    "sequence": 1,
+    "stream": "job",
+    "type": "job.accepted"
+  },
+  {
+    "clock_time": "2026-10-03T00:00:00Z",
+    "data": {
+      "aoi_id": "aoi_sg_tuas_coast",
+      "job_type": "full_analysis",
+      "scene_id": null
+    },
+    "emitted_at": "2026-10-03T00:00:00Z",
+    "id": "job_f5f0c6d7b318:2",
+    "job_id": "job_f5f0c6d7b318",
+    "mode": "replay",
+    "schema_version": "1.0",
+    "sequence": 2,
+    "stream": "job",
+    "type": "job.started"
+  },
+  {
+    "clock_time": "2026-10-03T00:00:00Z",
+    "data": {
+      "requested_at": "2026-10-03T00:00:00Z"
+    },
+    "emitted_at": "2026-10-03T00:00:00Z",
+    "id": "job_f5f0c6d7b318:3",
+    "job_id": "job_f5f0c6d7b318",
+    "mode": "replay",
+    "schema_version": "1.0",
+    "sequence": 3,
+    "stream": "job",
+    "type": "job.cancellation_requested"
+  },
+  {
+    "clock_time": "2026-10-03T00:00:00Z",
+    "data": {
+      "message": "Predicting Sentinel-2 geometric opportunities.",
+      "stage": "orbit",
+      "total_units": 3
+    },
+    "emitted_at": "2026-10-03T00:00:00Z",
+    "id": "job_f5f0c6d7b318:4",
+    "job_id": "job_f5f0c6d7b318",
+    "mode": "replay",
+    "schema_version": "1.0",
+    "sequence": 4,
+    "stream": "job",
+    "type": "job.stage.started"
+  },
+  {
+    "clock_time": "2026-10-03T00:00:00Z",
+    "data": {
+      "completed_units": 1,
+      "message": "Computed AOI statistics for 1 of 3 scenes.",
+      "overall_progress": 0.55,
+      "stage": "raster",
+      "stage_progress": 0.3333,
+      "total_units": 3
+    },
+    "emitted_at": "2026-10-03T00:00:00Z",
+    "id": "job_f5f0c6d7b318:5",
+    "job_id": "job_f5f0c6d7b318",
+    "mode": "replay",
+    "schema_version": "1.0",
+    "sequence": 5,
+    "stream": "job",
+    "type": "job.progress"
+  },
+  {
+    "clock_time": "2026-10-03T00:00:00Z",
+    "data": {
+      "provenance_id": "prv_opp_ef8b898f1dfb",
+      "resource": {
+        "acquisition_status": "unknown",
+        "aoi_id": "aoi_sg_tuas_coast",
+        "aoi_sun_elevation_deg": 53.82,
+        "caveat": "Geometric opportunity only; acquisition is not guaranteed.",
+        "closest_subpoint": {
+          "altitude_m": 786122.4,
+          "latitude": 1.01,
+          "longitude": 103.78
+        },
+        "closest_time": "2026-10-03T02:32:07.250000Z",
+        "direction": "descending",
+        "duration_seconds": 94.35,
+        "element_age_seconds": 36009.666896,
+        "entry_time": "2026-10-03T02:31:20.100000Z",
+        "exit_time": "2026-10-03T02:32:54.450000Z",
+        "id": "opp_ef8b898f1dfb",
+        "illumination": "daylight",
+        "kind": "geometric_opportunity",
+        "matched_scene_id": null,
+        "minimum_ground_track_distance_km": 37.41,
+        "platform": "sentinel-2c",
+        "provenance_id": "prv_opp_ef8b898f1dfb",
+        "satellite_id": "sentinel-2c",
+        "satellite_sunlit": true,
+        "source": {
+          "coarse_step_seconds": 20,
+          "crossing_tolerance_seconds": 0.05,
+          "omm_epoch": "2026-10-02T16:31:57.583104Z",
+          "omm_sha256": "7368f1805ce51fdd4acb5a1226ce40465d22a2589967c4e555ac243492abf844",
+          "propagation_model": "SGP4"
+        },
+        "swath_footprint": {
+          "coordinates": [
+            [
+              [
+                102.35,
+                -0.25
+              ],
+              [
+                105.03,
+                -0.25
+              ],
+              [
+                105.03,
+                2.85
+              ],
+              [
+                102.35,
+                2.85
+              ],
+              [
+                102.35,
+                -0.25
+              ]
+            ]
+          ],
+          "type": "Polygon"
+        },
+        "swath_width_km": 290.0,
+        "truncated": false
+      },
+      "resource_url": "/v1/aois/aoi_sg_tuas_coast/opportunities",
+      "result_type": "opportunity"
+    },
+    "emitted_at": "2026-10-03T00:00:00Z",
+    "id": "job_f5f0c6d7b318:6",
+    "job_id": "job_f5f0c6d7b318",
+    "mode": "replay",
+    "schema_version": "1.0",
+    "sequence": 6,
+    "stream": "job",
+    "type": "job.result"
+  },
+  {
+    "clock_time": "2026-10-03T00:00:00Z",
+    "data": {
+      "code": "STALE_OMM",
+      "details": {
+        "age_seconds": 90000
+      },
+      "message": "Using cached orbital elements beyond the preferred age.",
+      "retryable": false
+    },
+    "emitted_at": "2026-10-03T00:00:00Z",
+    "id": "job_f5f0c6d7b318:7",
+    "job_id": "job_f5f0c6d7b318",
+    "mode": "replay",
+    "schema_version": "1.0",
+    "sequence": 7,
+    "stream": "job",
+    "type": "job.warning"
+  },
+  {
+    "clock_time": "2026-10-03T00:00:00Z",
+    "data": {
+      "completed_units": 3,
+      "duration_seconds": 6.42,
+      "stage": "raster",
+      "total_units": 3
+    },
+    "emitted_at": "2026-10-03T00:00:00Z",
+    "id": "job_f5f0c6d7b318:8",
+    "job_id": "job_f5f0c6d7b318",
+    "mode": "replay",
+    "schema_version": "1.0",
+    "sequence": 8,
+    "stream": "job",
+    "type": "job.stage.completed"
+  },
+  {
+    "clock_time": "2026-10-03T00:00:00Z",
+    "data": {
+      "likelihood_url": "/v1/aois/aoi_sg_tuas_coast/likelihood",
+      "opportunity_count": 5,
+      "partial_failure_count": 0,
+      "scene_count": 3
+    },
+    "emitted_at": "2026-10-03T00:00:00Z",
+    "id": "job_f5f0c6d7b318:9",
+    "job_id": "job_f5f0c6d7b318",
+    "mode": "replay",
+    "schema_version": "1.0",
+    "sequence": 9,
+    "stream": "job",
+    "type": "job.completed"
+  },
+  {
+    "clock_time": "2026-10-03T00:00:00Z",
+    "data": {
+      "error": {
+        "code": "UPSTREAM_UNAVAILABLE",
+        "details": {},
+        "message": "Earth Search is unavailable.",
+        "request_id": "req_01d2e7d96cf4",
+        "retryable": true
+      },
+      "partial_result_urls": [
+        "/v1/aois/aoi_sg_tuas_coast/opportunities"
+      ]
+    },
+    "emitted_at": "2026-10-03T00:00:00Z",
+    "id": "job_f5f0c6d7b318:10",
+    "job_id": "job_f5f0c6d7b318",
+    "mode": "replay",
+    "schema_version": "1.0",
+    "sequence": 10,
+    "stream": "job",
+    "type": "job.failed"
+  },
+  {
+    "clock_time": "2026-10-03T00:00:00Z",
+    "data": {
+      "cancelled_at": "2026-10-03T00:00:00Z",
+      "partial_result_urls": [],
+      "reason": "Cancelled by client."
+    },
+    "emitted_at": "2026-10-03T00:00:00Z",
+    "id": "job_f5f0c6d7b318:11",
+    "job_id": "job_f5f0c6d7b318",
+    "mode": "replay",
+    "schema_version": "1.0",
+    "sequence": 11,
+    "stream": "job",
+    "type": "job.cancelled"
+  },
+  {
+    "clock_time": "2026-10-03T00:00:00Z",
+    "data": {
+      "paused": false,
+      "speed": 1.0
+    },
+    "emitted_at": "2026-10-03T00:00:00Z",
+    "id": "live:12",
+    "mode": "replay",
+    "schema_version": "1.0",
+    "sequence": 12,
+    "stream": "live",
+    "type": "live.clock"
+  },
+  {
+    "clock_time": "2026-10-03T00:00:00Z",
+    "data": {
+      "positions": [
+        {
+          "altitude_m": 786122.4,
+          "latitude": 1.01,
+          "longitude": 103.78,
+          "satellite_id": "sentinel-2c",
+          "swath_left": [
+            102.48,
+            1.01
+          ],
+          "swath_right": [
+            105.08,
+            1.01
+          ],
+          "time": "2026-10-03T00:00:00Z"
+        }
+      ]
+    },
+    "emitted_at": "2026-10-03T00:00:00Z",
+    "id": "live:13",
+    "mode": "replay",
+    "schema_version": "1.0",
+    "sequence": 13,
+    "stream": "live",
+    "type": "live.satellite_positions"
+  },
+  {
+    "clock_time": "2026-10-03T00:00:00Z",
+    "data": {
+      "aoi_id": "aoi_sg_tuas_coast",
+      "entry_time": "2026-10-03T02:31:20.100000Z",
+      "opportunity_id": "opp_ef8b898f1dfb",
+      "satellite_id": "sentinel-2c"
+    },
+    "emitted_at": "2026-10-03T00:00:00Z",
+    "id": "live:14",
+    "mode": "replay",
+    "schema_version": "1.0",
+    "sequence": 14,
+    "stream": "live",
+    "type": "live.opportunity.entered"
+  },
+  {
+    "clock_time": "2026-10-03T00:00:00Z",
+    "data": {
+      "aoi_id": "aoi_sg_tuas_coast",
+      "closest_time": "2026-10-03T02:32:07.250000Z",
+      "minimum_ground_track_distance_km": 37.41,
+      "opportunity_id": "opp_ef8b898f1dfb",
+      "satellite_id": "sentinel-2c"
+    },
+    "emitted_at": "2026-10-03T00:00:00Z",
+    "id": "live:15",
+    "mode": "replay",
+    "schema_version": "1.0",
+    "sequence": 15,
+    "stream": "live",
+    "type": "live.opportunity.closest"
+  },
+  {
+    "clock_time": "2026-10-03T00:00:00Z",
+    "data": {
+      "aoi_id": "aoi_sg_tuas_coast",
+      "exit_time": "2026-10-03T02:32:54.450000Z",
+      "opportunity_id": "opp_ef8b898f1dfb",
+      "satellite_id": "sentinel-2c"
+    },
+    "emitted_at": "2026-10-03T00:00:00Z",
+    "id": "live:16",
+    "mode": "replay",
+    "schema_version": "1.0",
+    "sequence": 16,
+    "stream": "live",
+    "type": "live.opportunity.exited"
+  },
+  {
+    "clock_time": "2026-10-03T00:00:00Z",
+    "data": {
+      "acquisition_time": "2026-10-01T03:19:11.406000Z",
+      "aoi_id": "aoi_sg_tuas_coast",
+      "scene_id": "S2C_48NUG_20261001_0_L2A",
+      "scene_url": "/v1/scenes/S2C_48NUG_20261001_0_L2A"
+    },
+    "emitted_at": "2026-10-03T00:00:00Z",
+    "id": "live:17",
+    "mode": "replay",
+    "schema_version": "1.0",
+    "sequence": 17,
+    "stream": "live",
+    "type": "live.scene.available"
+  },
+  {
+    "clock_time": "2026-10-03T00:00:00Z",
+    "data": {
+      "age_seconds": null,
+      "checked_at": "2026-10-03T00:00:00Z",
+      "error": null,
+      "source": "earth-search",
+      "status": "fixture"
+    },
+    "emitted_at": "2026-10-03T00:00:00Z",
+    "id": "live:18",
+    "mode": "replay",
+    "schema_version": "1.0",
+    "sequence": 18,
+    "stream": "live",
+    "type": "live.upstream.status"
+  },
+  {
+    "clock_time": "2026-10-03T00:00:00Z",
+    "data": {
+      "current_mode": "live",
+      "effective_clock": "2026-10-03T00:00:00Z",
+      "fixture_set": null,
+      "previous_mode": "replay"
+    },
+    "emitted_at": "2026-10-03T00:00:00Z",
+    "id": "live:19",
+    "mode": "replay",
+    "schema_version": "1.0",
+    "sequence": 19,
+    "stream": "live",
+    "type": "live.mode.changed"
+  },
+  {
+    "clock_time": "2026-10-03T00:00:00Z",
+    "data": {
+      "oldest_available_id": "live:42",
+      "reason": "Requested event predates retained history."
+    },
+    "emitted_at": "2026-10-03T00:00:00Z",
+    "id": "live:20",
+    "mode": "replay",
+    "schema_version": "1.0",
+    "sequence": 20,
+    "stream": "live",
+    "type": "stream.reset_required"
+  }
+]

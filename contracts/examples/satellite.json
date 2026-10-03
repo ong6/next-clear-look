@@ -1,0 +1,10 @@
+{
+  "id": "sentinel-2c",
+  "name": "Sentinel-2C",
+  "norad_catalog_id": 60989,
+  "omm_age_seconds": 26882.416896,
+  "omm_epoch": "2026-10-02T16:31:57.583104Z",
+  "platform": "sentinel-2c",
+  "provenance_id": "prv_satellite_s2c",
+  "status": "operational-observed"
+}

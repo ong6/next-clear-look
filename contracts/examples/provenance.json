@@ -1,0 +1,54 @@
+{
+  "created_at": "2026-10-03T00:00:00Z",
+  "edges": [
+    {
+      "from": "prv_node_omm",
+      "relation": "input_to",
+      "to": "prv_node_opp"
+    },
+    {
+      "from": "prv_node_opp",
+      "relation": "generated_by",
+      "to": "prv_node_orbit"
+    }
+  ],
+  "id": "prv_9dfd692c81d0",
+  "nodes": [
+    {
+      "available_offline": true,
+      "fetched_at": "2026-10-03T00:05:11Z",
+      "fixture_interaction_id": "int_celestrak_001",
+      "id": "prv_node_omm",
+      "kind": "raw_input",
+      "label": "CelesTrak Sentinel OMM catalogue",
+      "origin": "fixture",
+      "request_key_sha256": "3b5be69e3eb0d97506c5a43bf14960d7656faf07defbd6b6e6e4cc11f1cf5b2b",
+      "sha256": "7368f1805ce51fdd4acb5a1226ce40465d22a2589967c4e555ac243492abf844",
+      "source_id": "celestrak",
+      "source_url": "https://celestrak.org/NORAD/elements/gp.php?GROUP=sentinel&FORMAT=json"
+    },
+    {
+      "algorithm_version": "sgp4-swath-v1",
+      "available_offline": true,
+      "fixture_interaction_id": null,
+      "id": "prv_node_orbit",
+      "kind": "algorithm",
+      "label": "SGP4 nominal MSI swath",
+      "origin": null,
+      "request_key_sha256": null,
+      "source_id": null
+    },
+    {
+      "available_offline": true,
+      "fixture_interaction_id": null,
+      "id": "prv_node_opp",
+      "kind": "derived",
+      "label": "Tuas geometric opportunity",
+      "origin": null,
+      "request_key_sha256": null,
+      "sha256": "8f83a7f9c30b4428c877407262abc2b95d3a58d75177be74a722dbd8bc461a84",
+      "source_id": null
+    }
+  ],
+  "root_artifact_id": "opp_ef8b898f1dfb"
+}

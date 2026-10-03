@@ -1,0 +1,59 @@
+{
+  "$id": "https://next-clear-look.local/schemas/events/job.started.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "allOf": [
+    {
+      "$ref": "envelope.schema.json"
+    },
+    {
+      "properties": {
+        "data": {
+          "additionalProperties": false,
+          "properties": {
+            "aoi_id": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "job_type": {
+              "enum": [
+                "full_analysis",
+                "orbit_only",
+                "archive_refresh",
+                "raster_scene",
+                "likelihood_only"
+              ],
+              "type": "string"
+            },
+            "scene_id": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "job_type",
+            "aoi_id",
+            "scene_id"
+          ],
+          "type": "object"
+        },
+        "stream": {
+          "const": "job"
+        },
+        "type": {
+          "const": "job.started"
+        }
+      },
+      "required": [
+        "type",
+        "stream",
+        "data"
+      ],
+      "type": "object"
+    }
+  ],
+  "title": "Next Clear Look job.started event"
+}

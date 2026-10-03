@@ -1,0 +1,75 @@
+{
+  "$id": "https://next-clear-look.local/schemas/events/job.progress.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "allOf": [
+    {
+      "$ref": "envelope.schema.json"
+    },
+    {
+      "properties": {
+        "data": {
+          "additionalProperties": false,
+          "properties": {
+            "completed_units": {
+              "minimum": 0,
+              "type": "integer"
+            },
+            "message": {
+              "type": "string"
+            },
+            "overall_progress": {
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            "stage": {
+              "enum": [
+                "catalogue",
+                "orbit",
+                "archive",
+                "raster",
+                "likelihood",
+                "finalise"
+              ],
+              "type": "string"
+            },
+            "stage_progress": {
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            "total_units": {
+              "minimum": 0,
+              "type": [
+                "integer",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "stage",
+            "stage_progress",
+            "overall_progress",
+            "message",
+            "completed_units",
+            "total_units"
+          ],
+          "type": "object"
+        },
+        "stream": {
+          "const": "job"
+        },
+        "type": {
+          "const": "job.progress"
+        }
+      },
+      "required": [
+        "type",
+        "stream",
+        "data"
+      ],
+      "type": "object"
+    }
+  ],
+  "title": "Next Clear Look job.progress event"
+}

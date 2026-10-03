@@ -1,0 +1,35 @@
+id: live:12
+event: live.clock
+data: {"clock_time":"2026-10-03T00:00:00Z","data":{"paused":false,"speed":1.0},"emitted_at":"2026-10-03T00:00:00Z","id":"live:12","mode":"replay","schema_version":"1.0","sequence":12,"stream":"live","type":"live.clock"}
+
+id: live:13
+event: live.satellite_positions
+data: {"clock_time":"2026-10-03T00:00:00Z","data":{"positions":[{"altitude_m":786122.4,"latitude":1.01,"longitude":103.78,"satellite_id":"sentinel-2c","swath_left":[102.48,1.01],"swath_right":[105.08,1.01],"time":"2026-10-03T00:00:00Z"}]},"emitted_at":"2026-10-03T00:00:00Z","id":"live:13","mode":"replay","schema_version":"1.0","sequence":13,"stream":"live","type":"live.satellite_positions"}
+
+id: live:14
+event: live.opportunity.entered
+data: {"clock_time":"2026-10-03T00:00:00Z","data":{"aoi_id":"aoi_sg_tuas_coast","entry_time":"2026-10-03T02:31:20.100000Z","opportunity_id":"opp_ef8b898f1dfb","satellite_id":"sentinel-2c"},"emitted_at":"2026-10-03T00:00:00Z","id":"live:14","mode":"replay","schema_version":"1.0","sequence":14,"stream":"live","type":"live.opportunity.entered"}
+
+id: live:15
+event: live.opportunity.closest
+data: {"clock_time":"2026-10-03T00:00:00Z","data":{"aoi_id":"aoi_sg_tuas_coast","closest_time":"2026-10-03T02:32:07.250000Z","minimum_ground_track_distance_km":37.41,"opportunity_id":"opp_ef8b898f1dfb","satellite_id":"sentinel-2c"},"emitted_at":"2026-10-03T00:00:00Z","id":"live:15","mode":"replay","schema_version":"1.0","sequence":15,"stream":"live","type":"live.opportunity.closest"}
+
+id: live:16
+event: live.opportunity.exited
+data: {"clock_time":"2026-10-03T00:00:00Z","data":{"aoi_id":"aoi_sg_tuas_coast","exit_time":"2026-10-03T02:32:54.450000Z","opportunity_id":"opp_ef8b898f1dfb","satellite_id":"sentinel-2c"},"emitted_at":"2026-10-03T00:00:00Z","id":"live:16","mode":"replay","schema_version":"1.0","sequence":16,"stream":"live","type":"live.opportunity.exited"}
+
+id: live:17
+event: live.scene.available
+data: {"clock_time":"2026-10-03T00:00:00Z","data":{"acquisition_time":"2026-10-01T03:19:11.406000Z","aoi_id":"aoi_sg_tuas_coast","scene_id":"S2C_48NUG_20261001_0_L2A","scene_url":"/v1/scenes/S2C_48NUG_20261001_0_L2A"},"emitted_at":"2026-10-03T00:00:00Z","id":"live:17","mode":"replay","schema_version":"1.0","sequence":17,"stream":"live","type":"live.scene.available"}
+
+id: live:18
+event: live.upstream.status
+data: {"clock_time":"2026-10-03T00:00:00Z","data":{"age_seconds":null,"checked_at":"2026-10-03T00:00:00Z","error":null,"source":"earth-search","status":"fixture"},"emitted_at":"2026-10-03T00:00:00Z","id":"live:18","mode":"replay","schema_version":"1.0","sequence":18,"stream":"live","type":"live.upstream.status"}
+
+id: live:19
+event: live.mode.changed
+data: {"clock_time":"2026-10-03T00:00:00Z","data":{"current_mode":"live","effective_clock":"2026-10-03T00:00:00Z","fixture_set":null,"previous_mode":"replay"},"emitted_at":"2026-10-03T00:00:00Z","id":"live:19","mode":"replay","schema_version":"1.0","sequence":19,"stream":"live","type":"live.mode.changed"}
+
+id: live:20
+event: stream.reset_required
+data: {"clock_time":"2026-10-03T00:00:00Z","data":{"oldest_available_id":"live:42","reason":"Requested event predates retained history."},"emitted_at":"2026-10-03T00:00:00Z","id":"live:20","mode":"replay","schema_version":"1.0","sequence":20,"stream":"live","type":"stream.reset_required"}

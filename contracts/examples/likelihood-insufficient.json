@@ -1,0 +1,77 @@
+{
+  "acquisition_posterior": {
+    "alpha": 1.0,
+    "beta": 1.0,
+    "distribution": "Beta",
+    "excluded_count": 0,
+    "failure_count": 0,
+    "prior_alpha": 1.0,
+    "prior_beta": 1.0,
+    "sample_size": 0,
+    "success_count": 0
+  },
+  "aoi_id": "aoi_sg_tuas_coast",
+  "as_of": "2026-10-03T00:00:00Z",
+  "clear_posterior": {
+    "alpha": 1.0,
+    "beta": 1.0,
+    "distribution": "Beta",
+    "excluded_count": 0,
+    "failure_count": 0,
+    "prior_alpha": 1.0,
+    "prior_beta": 1.0,
+    "sample_size": 0,
+    "success_count": 0
+  },
+  "computed_at": "2026-10-03T00:00:00Z",
+  "excluded_evidence": [],
+  "history_end": "2026-10-03T00:00:00Z",
+  "history_start": "2023-10-03T00:00:00Z",
+  "horizons": [
+    {
+      "credible_interval": null,
+      "days": 7,
+      "opportunity_count": 3,
+      "opportunity_days": 2,
+      "probability": null
+    },
+    {
+      "credible_interval": null,
+      "days": 14,
+      "opportunity_count": 7,
+      "opportunity_days": 5,
+      "probability": null
+    }
+  ],
+  "interpretation": "Historical likelihood of at least one acquired, AOI-clear look; not a weather forecast or acquisition promise.",
+  "monte_carlo": {
+    "draws": 100000,
+    "model_version": "seasonal-beta-acquisition-clear-v1",
+    "rng": "numpy-pcg64",
+    "seed": 18006016087674619204
+  },
+  "provenance_id": "prv_likelihood_unrecorded_aoi",
+  "quality": "insufficient-data",
+  "season": {
+    "tier": "seasonal",
+    "timezone": "Asia/Singapore",
+    "window_days": 45
+  },
+  "surface_class_policy": {
+    "snow_ice_counted_as_surface": false,
+    "surface_scl_classes": [
+      4,
+      5,
+      6,
+      7
+    ]
+  },
+  "trial_evidence": [],
+  "usable_definition": {
+    "minimum_aoi_clear_percent": 70.0,
+    "minimum_valid_coverage_percent": 95.0,
+    "unit": "past looks"
+  },
+  "window_end": "2026-10-17T00:00:00Z",
+  "window_start": "2026-10-03T00:00:00Z"
+}

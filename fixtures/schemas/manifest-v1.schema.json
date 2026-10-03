@@ -1,0 +1,133 @@
+{
+  "$id": "https://next-clear-look.local/schemas/manifest-v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "blob": {
+      "additionalProperties": false,
+      "properties": {
+        "media_type": {"minLength": 1, "type": "string"},
+        "path": {"pattern": "^sha256/[0-9a-f]{2}/[0-9a-f]{64}$", "type": "string"},
+        "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+        "size": {"minimum": 0, "type": "integer"}
+      },
+      "required": ["sha256", "size", "path"],
+      "type": "object"
+    },
+    "interaction": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {"minLength": 1, "type": "string"},
+        "origin": {"enum": ["network", "cache", "fixture"]},
+        "request": {
+          "additionalProperties": false,
+          "properties": {
+            "body": {"$ref": "#/$defs/blob"},
+            "body_sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+            "headers": {
+              "additionalProperties": false,
+              "properties": {
+                "accept": {"type": "string"},
+                "content-type": {"type": "string"},
+                "range": {"pattern": "^bytes=[0-9]+-[0-9]+$", "type": "string"}
+              },
+              "type": "object"
+            },
+            "method": {"enum": ["GET", "POST"]},
+            "request_key_sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+            "url": {"format": "uri", "type": "string"}
+          },
+          "required": ["method", "url", "headers", "body_sha256", "request_key_sha256"],
+          "type": "object"
+        },
+        "response": {
+          "additionalProperties": false,
+          "properties": {
+            "body": {"$ref": "#/$defs/blob"},
+            "headers": {"additionalProperties": {"type": "string"}, "type": "object"},
+            "retrieved_at": {"format": "date-time", "type": "string"},
+            "status": {"enum": [200, 206]}
+          },
+          "required": ["status", "headers", "retrieved_at", "body"],
+          "type": "object"
+        },
+        "source_id": {
+          "enum": ["celestrak", "earth-search", "sentinel-cogs", "jpl-de421"]
+        }
+      },
+      "required": ["id", "origin", "source_id", "request", "response"],
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "aoi": {"pattern": "^presets/[-a-z0-9]+/aoi\\.geojson$", "type": "string"},
+    "attributions": {"items": {"type": "string"}, "type": "array", "uniqueItems": true},
+    "budget": {
+      "additionalProperties": {"minimum": 0, "type": "integer"},
+      "type": "object"
+    },
+    "derived": {
+      "additionalProperties": {
+        "additionalProperties": true,
+        "properties": {
+          "body": {"$ref": "#/$defs/blob"},
+          "source_body_sha256": {
+            "items": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+            "type": "array"
+          }
+        },
+        "required": ["body", "source_body_sha256"],
+        "type": "object"
+      },
+      "type": "object"
+    },
+    "fixture_set": {"const": "ncl-showcase"},
+    "frozen_at": {"format": "date-time", "type": "string"},
+    "history_provenance": {
+      "additionalProperties": false,
+      "properties": {
+        "bytes_bundled": {"const": false},
+        "interaction_ids": {
+          "items": {"minLength": 1, "type": "string"},
+          "type": "array",
+          "uniqueItems": true
+        },
+        "unbundled_interaction_ids": {
+          "items": {"minLength": 1, "type": "string"},
+          "type": "array",
+          "uniqueItems": true
+        }
+      },
+      "required": ["interaction_ids", "unbundled_interaction_ids", "bytes_bundled"],
+      "type": "object"
+    },
+    "interactions": {"items": {"$ref": "#/$defs/interaction"}, "type": "array"},
+    "preset_slug": {"pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$", "type": "string"},
+    "query_window": {
+      "additionalProperties": false,
+      "properties": {
+        "end": {"format": "date-time", "type": "string"},
+        "start": {"format": "date-time", "type": "string"}
+      },
+      "required": ["start", "end"],
+      "type": "object"
+    },
+    "recorded_at": {"format": "date-time", "type": "string"},
+    "schema": {"const": "ncl-fixture-manifest/v1"}
+  },
+  "required": [
+    "schema",
+    "fixture_set",
+    "preset_slug",
+    "recorded_at",
+    "frozen_at",
+    "aoi",
+    "query_window",
+    "history_provenance",
+    "interactions",
+    "derived",
+    "attributions",
+    "budget"
+  ],
+  "type": "object"
+}

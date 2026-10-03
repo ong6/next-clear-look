@@ -1,0 +1,105 @@
+{
+  "$id": "https://next-clear-look.local/schemas/events/live.upstream.status.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "allOf": [
+    {
+      "$ref": "envelope.schema.json"
+    },
+    {
+      "properties": {
+        "data": {
+          "additionalProperties": false,
+          "properties": {
+            "age_seconds": {
+              "minimum": 0,
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "checked_at": {
+              "format": "date-time",
+              "type": "string"
+            },
+            "error": {
+              "oneOf": [
+                {
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "pattern": "^[A-Z][A-Z0-9_]+$",
+                      "type": "string"
+                    },
+                    "details": {
+                      "type": "object"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "type": "string"
+                    },
+                    "retryable": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message",
+                    "retryable",
+                    "details",
+                    "request_id"
+                  ],
+                  "type": "object"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "source": {
+              "enum": [
+                "celestrak",
+                "earth-search",
+                "sentinel-cogs",
+                "jpl-de421"
+              ],
+              "type": "string"
+            },
+            "status": {
+              "enum": [
+                "ok",
+                "stale",
+                "unavailable",
+                "fixture",
+                "disabled"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "source",
+            "status",
+            "checked_at",
+            "age_seconds",
+            "error"
+          ],
+          "type": "object"
+        },
+        "stream": {
+          "const": "live"
+        },
+        "type": {
+          "const": "live.upstream.status"
+        }
+      },
+      "required": [
+        "type",
+        "stream",
+        "data"
+      ],
+      "type": "object"
+    }
+  ],
+  "title": "Next Clear Look live.upstream.status event"
+}

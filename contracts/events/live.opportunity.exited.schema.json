@@ -1,0 +1,51 @@
+{
+  "$id": "https://next-clear-look.local/schemas/events/live.opportunity.exited.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "allOf": [
+    {
+      "$ref": "envelope.schema.json"
+    },
+    {
+      "properties": {
+        "data": {
+          "additionalProperties": false,
+          "properties": {
+            "aoi_id": {
+              "type": "string"
+            },
+            "exit_time": {
+              "format": "date-time",
+              "type": "string"
+            },
+            "opportunity_id": {
+              "type": "string"
+            },
+            "satellite_id": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "aoi_id",
+            "opportunity_id",
+            "satellite_id",
+            "exit_time"
+          ],
+          "type": "object"
+        },
+        "stream": {
+          "const": "live"
+        },
+        "type": {
+          "const": "live.opportunity.exited"
+        }
+      },
+      "required": [
+        "type",
+        "stream",
+        "data"
+      ],
+      "type": "object"
+    }
+  ],
+  "title": "Next Clear Look live.opportunity.exited event"
+}

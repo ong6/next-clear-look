@@ -1,0 +1,9 @@
+{
+  "clock": "2026-10-03T00:00:00Z",
+  "deterministic": true,
+  "fixture_recorded_at": "2026-10-03T00:06:32Z",
+  "fixture_set": "ncl-showcase",
+  "live_available": false,
+  "mode": "replay",
+  "network_enabled": false
+}

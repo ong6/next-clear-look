@@ -1,0 +1,9 @@
+{
+  "error": {
+    "code": "NOT_FOUND",
+    "details": {},
+    "message": "The requested resource does not exist.",
+    "request_id": "req_01d2e7d96cf4",
+    "retryable": false
+  }
+}

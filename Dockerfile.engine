@@ -1,0 +1,30 @@
+ARG NCL_ENGINE_PLATFORM=linux/amd64
+FROM --platform=${NCL_ENGINE_PLATFORM} ghcr.io/astral-sh/uv:0.8.0 AS uv
+FROM --platform=${NCL_ENGINE_PLATFORM} python:3.12.12-slim-bookworm AS build
+
+ENV UV_COMPILE_BYTECODE=1 UV_LINK_MODE=copy
+COPY --from=uv /uv /usr/local/bin/uv
+WORKDIR /app
+COPY engine/pyproject.toml engine/uv.lock ./engine/
+RUN uv sync --project engine --frozen --no-dev --no-install-project
+COPY engine ./engine
+RUN uv sync --project engine --frozen --no-dev
+
+FROM --platform=${NCL_ENGINE_PLATFORM} python:3.12.12-slim-bookworm AS runtime
+ENV NCL_FIXTURES_DIR=/app/fixtures \
+    NCL_MODE=replay \
+    NCL_STATE_DIR=/var/lib/ncl \
+    PATH=/app/engine/.venv/bin:$PATH \
+    PYTHONUNBUFFERED=1 \
+    TZ=UTC
+RUN apt-get update \
+    && apt-get install --yes --no-install-recommends libexpat1 \
+    && rm -rf /var/lib/apt/lists/* \
+    && groupadd --system ncl && useradd --system --gid ncl --home-dir /nonexistent ncl \
+    && mkdir -p /var/lib/ncl && chown ncl:ncl /var/lib/ncl
+WORKDIR /app
+COPY --from=build --chown=ncl:ncl /app/engine /app/engine
+COPY --chown=ncl:ncl fixtures /app/fixtures
+USER ncl
+EXPOSE 8000
+CMD ["uvicorn", "ncl_engine.main:create_app", "--factory", "--host", "0.0.0.0", "--port", "8000"]

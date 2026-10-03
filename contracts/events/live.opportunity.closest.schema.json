@@ -1,0 +1,56 @@
+{
+  "$id": "https://next-clear-look.local/schemas/events/live.opportunity.closest.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "allOf": [
+    {
+      "$ref": "envelope.schema.json"
+    },
+    {
+      "properties": {
+        "data": {
+          "additionalProperties": false,
+          "properties": {
+            "aoi_id": {
+              "type": "string"
+            },
+            "closest_time": {
+              "format": "date-time",
+              "type": "string"
+            },
+            "minimum_ground_track_distance_km": {
+              "minimum": 0,
+              "type": "number"
+            },
+            "opportunity_id": {
+              "type": "string"
+            },
+            "satellite_id": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "aoi_id",
+            "opportunity_id",
+            "satellite_id",
+            "closest_time",
+            "minimum_ground_track_distance_km"
+          ],
+          "type": "object"
+        },
+        "stream": {
+          "const": "live"
+        },
+        "type": {
+          "const": "live.opportunity.closest"
+        }
+      },
+      "required": [
+        "type",
+        "stream",
+        "data"
+      ],
+      "type": "object"
+    }
+  ],
+  "title": "Next Clear Look live.opportunity.closest event"
+}

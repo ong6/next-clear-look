@@ -1,0 +1,24 @@
+{
+  "bbox": [3.93, 51.91, 4.1, 52.01],
+  "geometry": {
+    "coordinates": [
+      [
+        [3.93, 51.91],
+        [4.1, 51.91],
+        [4.1, 52.01],
+        [3.93, 52.01],
+        [3.93, 51.91]
+      ]
+    ],
+    "type": "Polygon"
+  },
+  "id": "aoi_nl_maasvlakte_port",
+  "properties": {
+    "climate_tags": ["temperate-maritime", "winter-low-sun"],
+    "locality": "Rotterdam, Netherlands",
+    "name": "Maasvlakte port",
+    "slug": "rotterdam-port",
+    "story": "Artificial coastline and port logistics make infrastructure change legible at Sentinel-2 scale."
+  },
+  "type": "Feature"
+}

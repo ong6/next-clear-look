@@ -1,0 +1,30 @@
+{
+  "cache": "ok",
+  "clock": "2026-10-03T00:00:00Z",
+  "database": "ok",
+  "mode": "replay",
+  "status": "ok",
+  "upstreams": {
+    "celestrak": {
+      "last_success_at": "2026-10-03T00:05:11Z",
+      "reason": null,
+      "status": "fixture"
+    },
+    "earth-search": {
+      "last_success_at": "2026-10-03T00:05:32Z",
+      "reason": null,
+      "status": "fixture"
+    },
+    "jpl-de421": {
+      "last_success_at": "2026-10-03T00:06:32Z",
+      "reason": null,
+      "status": "fixture"
+    },
+    "sentinel-cogs": {
+      "last_success_at": "2026-10-03T00:06:28Z",
+      "reason": null,
+      "status": "fixture"
+    }
+  },
+  "version": "1.0.0"
+}

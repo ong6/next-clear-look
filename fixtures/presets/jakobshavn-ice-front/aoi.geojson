@@ -1,0 +1,24 @@
+{
+  "bbox": [-50.25, 69.1, -49.75, 69.25],
+  "geometry": {
+    "coordinates": [
+      [
+        [-50.25, 69.1],
+        [-49.75, 69.1],
+        [-49.75, 69.25],
+        [-50.25, 69.25],
+        [-50.25, 69.1]
+      ]
+    ],
+    "type": "Polygon"
+  },
+  "id": "aoi_gl_jakobshavn_ice_front",
+  "properties": {
+    "climate_tags": ["polar-cloud", "snow-and-ice", "seasonal-darkness"],
+    "locality": "Ilulissat, Greenland",
+    "name": "Jakobshavn ice front",
+    "slug": "jakobshavn-ice-front",
+    "story": "A recognizable ice-front and sea-ice boundary makes archive changes visually distinct."
+  },
+  "type": "Feature"
+}

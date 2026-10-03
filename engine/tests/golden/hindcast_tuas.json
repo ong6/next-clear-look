@@ -1,0 +1,31 @@
+{
+  "window_start": "2026-09-13T00:00:00Z",
+  "window_end": "2026-10-03T00:00:00Z",
+  "acquisitions": [
+    {
+      "id": "GS2B_20260916T031539_049765_N05.12",
+      "platform": "sentinel-2b",
+      "acquisition_time": "2026-09-16T03:37:45.352000Z"
+    },
+    {
+      "id": "GS2C_20260921T031521_010670_N05.12",
+      "platform": "sentinel-2c",
+      "acquisition_time": "2026-09-21T03:37:47.207000Z"
+    },
+    {
+      "id": "GS2A_20260923T032151_058774_N05.13",
+      "platform": "sentinel-2a",
+      "acquisition_time": "2026-09-23T03:38:00.690000Z"
+    },
+    {
+      "id": "GS2B_20260926T031539_049908_N05.13",
+      "platform": "sentinel-2b",
+      "acquisition_time": "2026-09-26T03:37:46.677000Z"
+    },
+    {
+      "id": "GS2C_20261001T031531_010813_N05.13",
+      "platform": "sentinel-2c",
+      "acquisition_time": "2026-10-01T03:37:48.500000Z"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "aoi_id": "aoi_sg_tuas_coast",
+  "byte_length": 384121,
+  "height": 512,
+  "media_type": "image/png",
+  "provenance_id": "prv_thumb_s2c_20261001_tuas",
+  "scene_id": "S2C_48NUG_20261001_0_L2A",
+  "sha256": "9584ad9f08ae7e4cb028979078659c0d03ef27aa33f0c86fcc8be57d641e57c3",
+  "transparent_outside_aoi": true,
+  "url": "/v1/scenes/S2C_48NUG_20261001_0_L2A/thumbnails/aoi_sg_tuas_coast",
+  "width": 640
+}

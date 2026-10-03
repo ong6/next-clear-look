@@ -1,0 +1,7 @@
+dist
+.local
+node_modules
+playwright-report
+test-results
+public
+src/api/generated/schema.ts

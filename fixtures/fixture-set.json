@@ -1,0 +1,105 @@
+{
+  "budget": {
+    "catalogue_json_bytes": 4832334,
+    "derived_png_bytes": 11598327,
+    "examples_goldens_sse_bytes": 49394,
+    "limit_bytes": 41943040,
+    "orbital_ephemeris_bytes": 248064,
+    "raw_scl_range_bytes": 3632833,
+    "unique_referenced_bytes": 21043473
+  },
+  "fixture_set": "ncl-showcase",
+  "frozen_at": "2026-10-01T01:37:48.308302Z",
+  "interactions": [
+    {
+      "id": "celestrak-0001-aeece5158fe1",
+      "origin": "cache",
+      "request": {
+        "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "headers": {
+          "accept": "application/json"
+        },
+        "method": "GET",
+        "request_key_sha256": "aeece5158fe1ed2fc7d893bd2d980d2f7dc98148cff6ce3a388bfaff08af2b66",
+        "url": "https://celestrak.org/NORAD/elements/gp.php?FORMAT=JSON&NAME=SENTINEL-2"
+      },
+      "response": {
+        "body": {
+          "path": "sha256/2d/2d4502db294e260f69fe16628184744f529f8af8d4e1c51a2f8fa7c86cf44a46",
+          "sha256": "2d4502db294e260f69fe16628184744f529f8af8d4e1c51a2f8fa7c86cf44a46",
+          "size": 1256
+        },
+        "headers": {
+          "content-length": "1256",
+          "content-type": "application/json; charset=UTF-8",
+          "date": "Fri, 02 Oct 2026 19:35:37 GMT",
+          "server": "Microsoft-IIS/10.0",
+          "x-ncl-cache-stale": "true"
+        },
+        "retrieved_at": "2026-10-02T19:35:36.011051Z",
+        "status": 200
+      },
+      "source_id": "celestrak"
+    }
+  ],
+  "presets": [
+    {
+      "aoi": "presets/singapore-coast/aoi.geojson",
+      "manifest": "presets/singapore-coast/manifest.json",
+      "slug": "singapore-coast"
+    },
+    {
+      "aoi": "presets/rotterdam-port/aoi.geojson",
+      "manifest": "presets/rotterdam-port/manifest.json",
+      "slug": "rotterdam-port"
+    },
+    {
+      "aoi": "presets/atacama-works/aoi.geojson",
+      "manifest": "presets/atacama-works/manifest.json",
+      "slug": "atacama-works"
+    },
+    {
+      "aoi": "presets/sundarbans-delta/aoi.geojson",
+      "manifest": "presets/sundarbans-delta/manifest.json",
+      "slug": "sundarbans-delta"
+    },
+    {
+      "aoi": "presets/jakobshavn-ice-front/aoi.geojson",
+      "manifest": "presets/jakobshavn-ice-front/manifest.json",
+      "slug": "jakobshavn-ice-front"
+    }
+  ],
+  "recorded_at": "2026-10-03T01:28:47.076771Z",
+  "schema": "ncl-fixture-set/v1",
+  "sources": {
+    "celestrak": {
+      "media_type": "application/json",
+      "path": "sha256/2d/2d4502db294e260f69fe16628184744f529f8af8d4e1c51a2f8fa7c86cf44a46",
+      "sha256": "2d4502db294e260f69fe16628184744f529f8af8d4e1c51a2f8fa7c86cf44a46",
+      "size": 1256
+    },
+    "ephemeris": {
+      "body": {
+        "media_type": "application/vnd.jpl.spk",
+        "path": "sha256/fb/fb18986a9f2a5bf510b597f5c446c9c257c8e2fc79396060e881a24897243af1",
+        "sha256": "fb18986a9f2a5bf510b597f5c446c9c257c8e2fc79396060e881a24897243af1",
+        "size": 246808
+      },
+      "coverage": "2023-01-01/2027-12-31",
+      "provenance": {
+        "bytes_bundled": true,
+        "path": "fb18986a9f2a5bf510b597f5c446c9c257c8e2fc79396060e881a24897243af1",
+        "sha256": "fb18986a9f2a5bf510b597f5c446c9c257c8e2fc79396060e881a24897243af1"
+      },
+      "source_id": "jpl-de421",
+      "targets": [
+        3,
+        5,
+        6,
+        10,
+        399
+      ]
+    }
+  },
+  "status": "ready"
+}

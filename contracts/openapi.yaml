@@ -1,0 +1,1501 @@
+openapi: 3.1.0
+jsonSchemaDialect: https://json-schema.org/draft/2020-12/schema
+info:
+  title: Next Clear Look Engine API
+  version: 1.0.0
+  summary: Sentinel-2 geometric opportunities, AOI archive evidence and historical likelihoods.
+  description: |
+    HTTP contract between the engine and the web app. An opportunity is geometry, not promised acquisition.
+    A likelihood is empirical history, not a weather forecast. All instants are aware UTC RFC 3339.
+servers:
+  - url: http://localhost:8000/v1
+    description: Local engine
+tags:
+  - name: System
+  - name: AOIs
+  - name: Satellites
+  - name: Opportunities
+  - name: Scenes
+  - name: Likelihood
+  - name: Provenance
+  - name: Jobs
+  - name: Streams
+
+paths:
+  /health:
+    get:
+      tags: [System]
+      operationId: getHealth
+      summary: Liveness, readiness and source-mode health.
+      responses:
+        '200':
+          description: Engine is ready to serve its current mode.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Health'
+              examples:
+                singapore:
+                  externalValue: ./examples/health.json
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+
+  /mode:
+    get:
+      tags: [System]
+      operationId: getMode
+      summary: Read the active source mode and effective clock.
+      responses:
+        '200':
+          description: Current mode.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Mode'
+              examples:
+                replay:
+                  externalValue: ./examples/mode-replay.json
+                live:
+                  externalValue: ./examples/mode-live.json
+    put:
+      tags: [System]
+      operationId: switchMode
+      summary: Switch source adapter and clock when no job is active.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ModeSwitchRequest'
+            examples:
+              live:
+                externalValue: ./examples/mode-switch-live.json
+      responses:
+        '200':
+          description: Mode changed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Mode'
+              examples:
+                live:
+                  externalValue: ./examples/mode-live.json
+        '409':
+          description: Live mode is disabled, jobs are active, or the fixture set cannot be loaded.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                live_disabled:
+                  externalValue: ./examples/error-live-disabled.json
+        '422':
+          $ref: '#/components/responses/ValidationError'
+
+  /attributions:
+    get:
+      tags: [System]
+      operationId: listAttributions
+      summary: Get display-ready source and terms attribution required by the data providers.
+      responses:
+        '200':
+          description: Source attributions for the active engine build.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AttributionList'
+              examples:
+                sources:
+                  externalValue: ./examples/attributions.json
+
+  /aois:
+    get:
+      tags: [AOIs]
+      operationId: listAois
+      summary: List saved AOIs.
+      parameters:
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Cursor'
+      responses:
+        '200':
+          description: AOI page.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AoiPage'
+              examples:
+                saved:
+                  externalValue: ./examples/aoi-page.json
+    post:
+      tags: [AOIs]
+      operationId: createAoi
+      summary: Validate, canonicalise and save a Polygon or MultiPolygon.
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AoiCreate'
+            examples:
+              singapore:
+                externalValue: ./examples/aoi-create.json
+      responses:
+        '201':
+          description: AOI created.
+          headers:
+            Location:
+              schema: {type: string, format: uri-reference}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Aoi'
+              examples:
+                singapore:
+                  externalValue: ./examples/aoi.json
+        '409':
+          description: Idempotency key was reused with different content.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+
+  /aois/{aoi_id}:
+    parameters:
+      - $ref: '#/components/parameters/AoiId'
+    get:
+      tags: [AOIs]
+      operationId: getAoi
+      summary: Get one AOI.
+      responses:
+        '200':
+          description: AOI.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Aoi'
+              examples:
+                singapore:
+                  externalValue: ./examples/aoi.json
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      tags: [AOIs]
+      operationId: updateAoi
+      summary: Rename or replace AOI geometry; geometry changes invalidate derived cache keys.
+      requestBody:
+        required: true
+        content:
+          application/merge-patch+json:
+            schema:
+              $ref: '#/components/schemas/AoiPatch'
+            examples:
+              rename:
+                externalValue: ./examples/aoi-patch.json
+      responses:
+        '200':
+          description: Updated AOI.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Aoi'
+              examples:
+                singapore:
+                  externalValue: ./examples/aoi.json
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+    delete:
+      tags: [AOIs]
+      operationId: deleteAoi
+      summary: Delete an AOI and its unpinned derived records.
+      responses:
+        '204':
+          description: Deleted; no response body.
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /satellites:
+    get:
+      tags: [Satellites]
+      operationId: listSatellites
+      summary: List Sentinel-2 spacecraft reconciled across OMM and STAC evidence.
+      responses:
+        '200':
+          description: Satellite list.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SatellitePage'
+              examples:
+                singapore:
+                  externalValue: ./examples/satellites.json
+
+  /satellites/{satellite_id}:
+    parameters:
+      - $ref: '#/components/parameters/SatelliteId'
+    get:
+      tags: [Satellites]
+      operationId: getSatellite
+      summary: Get current catalogue evidence for one satellite.
+      responses:
+        '200':
+          description: Satellite.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Satellite'
+              examples:
+                sentinel_2c:
+                  externalValue: ./examples/satellite.json
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /satellites/{satellite_id}/trajectory:
+    parameters:
+      - $ref: '#/components/parameters/SatelliteId'
+    get:
+      tags: [Satellites]
+      operationId: getTrajectory
+      summary: Get compact geodetic samples for client-side interpolation.
+      parameters:
+        - name: start
+          in: query
+          required: true
+          schema: {$ref: '#/components/schemas/Timestamp'}
+        - name: end
+          in: query
+          required: true
+          schema: {$ref: '#/components/schemas/Timestamp'}
+        - name: step_seconds
+          in: query
+          schema: {type: integer, minimum: 10, maximum: 600, default: 60}
+      responses:
+        '200':
+          description: Sampled trajectory.
+          headers:
+            X-Provenance-Id:
+              $ref: '#/components/headers/ProvenanceId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Trajectory'
+              examples:
+                singapore:
+                  externalValue: ./examples/trajectory.json
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+
+  /aois/{aoi_id}/opportunities:
+    parameters:
+      - $ref: '#/components/parameters/AoiId'
+    get:
+      tags: [Opportunities]
+      operationId: listOpportunities
+      summary: List geometric Sentinel-2 opportunities for an AOI.
+      description: >-
+        These are geometric opportunities and do not promise acquisition. When from and to are
+        omitted, the window starts at the engine clock and ends 14 days later. Supply both values
+        to request a different window.
+      parameters:
+        - name: from
+          in: query
+          description: Inclusive window start. Must be supplied together with to.
+          schema: {$ref: '#/components/schemas/Timestamp'}
+        - name: to
+          in: query
+          description: Exclusive window end. Must be supplied together with from.
+          schema: {$ref: '#/components/schemas/Timestamp'}
+        - name: satellite_id
+          in: query
+          schema: {type: string}
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Cursor'
+      responses:
+        '200':
+          description: Opportunity page.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpportunityPage'
+              examples:
+                singapore:
+                  externalValue: ./examples/opportunities.json
+        '202':
+          description: Analysis is not cached and has been queued.
+          headers:
+            Location:
+              schema: {type: string, format: uri-reference}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalysisJob'
+              examples:
+                pending:
+                  externalValue: ./examples/analysis-job.json
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+
+  /aois/{aoi_id}/scenes:
+    parameters:
+      - $ref: '#/components/parameters/AoiId'
+    get:
+      tags: [Scenes]
+      operationId: listScenes
+      summary: List intersecting archive scenes and AOI-level statistics when available.
+      description: Defaults to the half-open archive window [clock minus 30 days, clock).
+      parameters:
+        - name: from
+          in: query
+          schema: {$ref: '#/components/schemas/Timestamp'}
+        - name: to
+          in: query
+          schema: {$ref: '#/components/schemas/Timestamp'}
+        - name: minimum_aoi_clear_percent
+          in: query
+          schema: {type: number, minimum: 0, maximum: 100}
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Cursor'
+      responses:
+        '200':
+          description: Scene page.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScenePage'
+              examples:
+                singapore:
+                  externalValue: ./examples/scenes.json
+                empty_archive:
+                  externalValue: ./examples/scenes-empty.json
+                replay_not_recorded:
+                  externalValue: ./examples/scenes-not-recorded.json
+        '202':
+          description: Archive search is pending; this is distinct from an empty completed archive.
+          headers:
+            Location:
+              schema: {type: string, format: uri-reference}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalysisJob'
+              examples:
+                pending:
+                  externalValue: ./examples/analysis-job.json
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+
+  /scenes/{scene_id}:
+    parameters:
+      - $ref: '#/components/parameters/SceneId'
+    get:
+      tags: [Scenes]
+      operationId: getScene
+      summary: Get STAC-derived scene metadata and engine resource links.
+      responses:
+        '200':
+          description: Scene.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Scene'
+              examples:
+                singapore:
+                  externalValue: ./examples/scene.json
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /scenes/{scene_id}/statistics/{aoi_id}:
+    parameters:
+      - $ref: '#/components/parameters/SceneId'
+      - $ref: '#/components/parameters/AoiId'
+    get:
+      tags: [Scenes]
+      operationId: getSceneStatistics
+      summary: Get AOI-rasterised SCL statistics and class counts.
+      responses:
+        '200':
+          description: AOI statistics.
+          headers:
+            X-Provenance-Id:
+              $ref: '#/components/headers/ProvenanceId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RasterStatistics'
+              examples:
+                singapore:
+                  externalValue: ./examples/scene-statistics.json
+        '202':
+          description: Raster analysis queued.
+          headers:
+            Location:
+              schema: {type: string, format: uri-reference}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalysisJob'
+              examples:
+                pending:
+                  externalValue: ./examples/analysis-job.json
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /scenes/{scene_id}/thumbnails/{aoi_id}:
+    parameters:
+      - $ref: '#/components/parameters/SceneId'
+      - $ref: '#/components/parameters/AoiId'
+    get:
+      tags: [Scenes]
+      operationId: getSceneThumbnail
+      summary: Get a true-colour PNG clipped to the AOI, transparent outside it.
+      responses:
+        '200':
+          description: Clipped RGBA PNG.
+          headers:
+            ETag:
+              schema: {type: string}
+              description: Quoted SHA-256 of the PNG bytes.
+            X-Provenance-Id:
+              $ref: '#/components/headers/ProvenanceId'
+            Cache-Control:
+              schema: {type: string, example: 'public, max-age=31536000, immutable'}
+          content:
+            image/png:
+              schema: {type: string, format: binary}
+        '202':
+          description: Thumbnail generation queued.
+          headers:
+            Location:
+              schema: {type: string, format: uri-reference}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalysisJob'
+              examples:
+                pending:
+                  externalValue: ./examples/analysis-job.json
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /scenes/{scene_id}/thumbnails/{aoi_id}/metadata:
+    parameters:
+      - $ref: '#/components/parameters/SceneId'
+      - $ref: '#/components/parameters/AoiId'
+    get:
+      tags: [Scenes]
+      operationId: getSceneThumbnailMetadata
+      summary: Get thumbnail dimensions, checksum and lineage link.
+      responses:
+        '200':
+          description: Thumbnail metadata.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ThumbnailMetadata'
+              examples:
+                singapore:
+                  externalValue: ./examples/thumbnail-metadata.json
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /aois/{aoi_id}/likelihood:
+    parameters:
+      - $ref: '#/components/parameters/AoiId'
+    get:
+      tags: [Likelihood]
+      operationId: getLikelihood
+      summary: Get historical chance of at least one usable look in 7 and 14 days.
+      description: Empirical historical likelihood; not weather forecasting or tasking.
+      parameters:
+        - name: as_of
+          in: query
+          schema: {$ref: '#/components/schemas/Timestamp'}
+          description: Defaults to the active deterministic clock.
+      responses:
+        '200':
+          description: Likelihood with posterior, interval and sample evidence.
+          headers:
+            X-Provenance-Id:
+              $ref: '#/components/headers/ProvenanceId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Likelihood'
+              examples:
+                singapore:
+                  externalValue: ./examples/likelihood.json
+                insufficient_data:
+                  externalValue: ./examples/likelihood-insufficient.json
+        '202':
+          description: Likelihood analysis queued.
+          headers:
+            Location:
+              schema: {type: string, format: uri-reference}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalysisJob'
+              examples:
+                pending:
+                  externalValue: ./examples/analysis-job.json
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /provenance/{provenance_id}:
+    parameters:
+      - $ref: '#/components/parameters/ProvenanceId'
+    get:
+      tags: [Provenance]
+      operationId: getProvenance
+      summary: Resolve raw inputs, algorithms and lineage for a derived result.
+      responses:
+        '200':
+          description: Directed acyclic provenance graph.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProvenanceGraph'
+              examples:
+                singapore:
+                  externalValue: ./examples/provenance.json
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /analysis-jobs:
+    get:
+      tags: [Jobs]
+      operationId: listAnalysisJobs
+      summary: List jobs, newest first.
+      parameters:
+        - name: state
+          in: query
+          schema:
+            $ref: '#/components/schemas/JobState'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Cursor'
+      responses:
+        '200':
+          description: Job page.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobPage'
+              examples:
+                recent:
+                  externalValue: ./examples/analysis-jobs.json
+    post:
+      tags: [Jobs]
+      operationId: createAnalysisJob
+      summary: Queue bounded, cancellable analysis work.
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnalysisJobCreate'
+            examples:
+              full_analysis:
+                externalValue: ./examples/analysis-job-create.json
+      responses:
+        '202':
+          description: Accepted, or an identical existing job was returned.
+          headers:
+            Location:
+              schema: {type: string, format: uri-reference}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalysisJob'
+              examples:
+                singapore:
+                  externalValue: ./examples/analysis-job.json
+        '409':
+          description: Idempotency conflict or incompatible mode.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+
+  /analysis-jobs/{job_id}:
+    parameters:
+      - $ref: '#/components/parameters/JobId'
+    get:
+      tags: [Jobs]
+      operationId: getAnalysisJob
+      summary: Get durable job state and terminal result/error.
+      responses:
+        '200':
+          description: Job.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalysisJob'
+              examples:
+                completed:
+                  externalValue: ./examples/analysis-job-completed.json
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      tags: [Jobs]
+      operationId: cancelAnalysisJob
+      summary: Idempotently request cancellation.
+      responses:
+        '202':
+          description: Cancellation requested or job already cancelled.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalysisJob'
+              examples:
+                cancelling:
+                  externalValue: ./examples/analysis-job-cancelling.json
+        '409':
+          description: Job already reached a non-cancelled terminal state.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /analysis-jobs/{job_id}/events:
+    parameters:
+      - $ref: '#/components/parameters/JobId'
+      - $ref: '#/components/parameters/LastEventIdQuery'
+    get:
+      tags: [Streams]
+      operationId: streamAnalysisJobEvents
+      summary: Resumeable per-job progress, warning, partial-result and terminal events.
+      parameters:
+        - $ref: '#/components/parameters/LastEventIdHeader'
+      responses:
+        '200':
+          description: SSE stream. Schemas and ordering are normative in events.md.
+          headers:
+            Cache-Control:
+              schema: {type: string, const: no-cache}
+            X-Accel-Buffering:
+              schema: {type: string, const: 'no'}
+          content:
+            text/event-stream:
+              schema: {type: string}
+              examples:
+                replay:
+                  externalValue: ./examples/job-events.sse
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '410':
+          description: Requested event is older than retained job history.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /events:
+    get:
+      tags: [Streams]
+      operationId: streamLiveEvents
+      summary: Resumeable mode clock, satellite-position, opportunity and new-scene events.
+      parameters:
+        - $ref: '#/components/parameters/LastEventIdHeader'
+        - $ref: '#/components/parameters/LastEventIdQuery'
+        - name: aoi_id
+          in: query
+          schema: {type: string}
+          description: Optional AOI filter for opportunity/scene events.
+      responses:
+        '200':
+          description: SSE live/replay stream; see events.md.
+          content:
+            text/event-stream:
+              schema: {type: string}
+              examples:
+                replay:
+                  externalValue: ./examples/live-events.sse
+
+components:
+  parameters:
+    AoiId:
+      name: aoi_id
+      in: path
+      required: true
+      schema: {type: string, pattern: '^aoi_[A-Za-z0-9_-]+$'}
+    SatelliteId:
+      name: satellite_id
+      in: path
+      required: true
+      schema: {type: string, enum: [sentinel-2a, sentinel-2b, sentinel-2c]}
+    SceneId:
+      name: scene_id
+      in: path
+      required: true
+      schema: {type: string, minLength: 1, maxLength: 200}
+    ProvenanceId:
+      name: provenance_id
+      in: path
+      required: true
+      schema: {type: string, pattern: '^prv_[A-Za-z0-9_-]+$'}
+    JobId:
+      name: job_id
+      in: path
+      required: true
+      schema: {type: string, pattern: '^job_[A-Za-z0-9_-]+$'}
+    Limit:
+      name: limit
+      in: query
+      schema: {type: integer, minimum: 1, maximum: 200, default: 50}
+    Cursor:
+      name: cursor
+      in: query
+      schema: {type: string, maxLength: 512}
+    IdempotencyKey:
+      name: Idempotency-Key
+      in: header
+      required: false
+      schema: {type: string, minLength: 8, maxLength: 128}
+    LastEventIdHeader:
+      name: Last-Event-ID
+      in: header
+      required: false
+      schema: {type: string, maxLength: 200}
+    LastEventIdQuery:
+      name: last_event_id
+      in: query
+      required: false
+      schema: {type: string, maxLength: 200}
+      description: Browser-compatible fallback when a client cannot set Last-Event-ID; header wins.
+
+  headers:
+    ProvenanceId:
+      schema: {type: string, pattern: '^prv_[A-Za-z0-9_-]+$'}
+      description: Lineage graph for the returned representation.
+
+  responses:
+    NotFound:
+      description: The addressed resource does not exist.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            missing:
+              externalValue: ./examples/error.json
+    ValidationError:
+      description: Request syntax was valid but one or more values failed validation.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    TooManyRequests:
+      description: The bounded job queue is full or a source rate limit applies.
+      headers:
+        Retry-After:
+          schema: {type: integer, minimum: 1}
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    ServiceUnavailable:
+      description: Engine is live but not ready in its selected mode.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
+  schemas:
+    Timestamp:
+      type: string
+      format: date-time
+      examples: ['2026-10-02T17:43:54Z']
+
+    GeoJsonGeometry:
+      oneOf:
+        - $ref: '#/components/schemas/GeoJsonPolygon'
+        - $ref: '#/components/schemas/GeoJsonMultiPolygon'
+
+    Position:
+      type: array
+      prefixItems:
+        - {type: number, minimum: -180, maximum: 180}
+        - {type: number, minimum: -90, maximum: 90}
+      minItems: 2
+      maxItems: 2
+
+    LinearRing:
+      type: array
+      items: {$ref: '#/components/schemas/Position'}
+      minItems: 4
+
+    GeoJsonPolygon:
+      type: object
+      additionalProperties: false
+      required: [type, coordinates]
+      properties:
+        type: {type: string, const: Polygon}
+        coordinates:
+          type: array
+          items: {$ref: '#/components/schemas/LinearRing'}
+          minItems: 1
+
+    GeoJsonMultiPolygon:
+      type: object
+      additionalProperties: false
+      required: [type, coordinates]
+      properties:
+        type: {type: string, const: MultiPolygon}
+        coordinates:
+          type: array
+          minItems: 1
+          items:
+            type: array
+            minItems: 1
+            items: {$ref: '#/components/schemas/LinearRing'}
+
+    Bbox:
+      type: array
+      prefixItems:
+        - {type: number}
+        - {type: number}
+        - {type: number}
+        - {type: number}
+      minItems: 4
+      maxItems: 4
+
+    GeoJsonPoint:
+      type: object
+      additionalProperties: false
+      required: [type, coordinates]
+      properties:
+        type: {type: string, const: Point}
+        coordinates: {$ref: '#/components/schemas/Position'}
+
+    AoiPreset:
+      type: object
+      additionalProperties: false
+      required: [slug, locality, story, climate_tags]
+      properties:
+        slug: {type: string, pattern: '^[a-z0-9]+(?:-[a-z0-9]+)*$'}
+        locality: {type: string}
+        story: {type: string}
+        climate_tags:
+          type: array
+          items: {type: string}
+
+    ReplayCoverage:
+      type: object
+      additionalProperties: false
+      required: [opportunities, archive, likelihood, thumbnails]
+      properties:
+        opportunities: {type: boolean}
+        archive: {type: boolean}
+        likelihood: {type: boolean}
+        thumbnails: {type: boolean}
+
+    AoiCreate:
+      type: object
+      additionalProperties: false
+      required: [name, geometry]
+      properties:
+        name: {type: string, minLength: 1, maxLength: 120}
+        geometry: {$ref: '#/components/schemas/GeoJsonGeometry'}
+        timezone: {type: string, default: UTC, maxLength: 80}
+
+    AoiPatch:
+      type: object
+      additionalProperties: false
+      minProperties: 1
+      properties:
+        name: {type: string, minLength: 1, maxLength: 120}
+        geometry: {$ref: '#/components/schemas/GeoJsonGeometry'}
+        timezone: {type: string, maxLength: 80}
+
+    Aoi:
+      type: object
+      additionalProperties: false
+      required: [id, name, origin, preset, geometry, centroid, bbox, timezone, area_km2, geometry_sha256, replay_coverage, created_at, updated_at, provenance_id]
+      properties:
+        id: {type: string}
+        name: {type: string}
+        origin: {type: string, enum: [preset, user]}
+        preset:
+          oneOf: [{$ref: '#/components/schemas/AoiPreset'}, {type: 'null'}]
+        geometry: {$ref: '#/components/schemas/GeoJsonGeometry'}
+        centroid: {$ref: '#/components/schemas/GeoJsonPoint'}
+        bbox: {$ref: '#/components/schemas/Bbox'}
+        timezone: {type: string}
+        area_km2: {type: number, exclusiveMinimum: 0, maximum: 250000}
+        geometry_sha256: {type: string, pattern: '^[a-f0-9]{64}$'}
+        replay_coverage: {$ref: '#/components/schemas/ReplayCoverage'}
+        created_at: {$ref: '#/components/schemas/Timestamp'}
+        updated_at: {$ref: '#/components/schemas/Timestamp'}
+        provenance_id: {type: string}
+
+    PaginationMeta:
+      type: object
+      additionalProperties: false
+      required: [count, next_cursor]
+      properties:
+        count: {type: integer, minimum: 0}
+        next_cursor: {type: [string, 'null']}
+        as_of: {$ref: '#/components/schemas/Timestamp'}
+
+    AoiPage:
+      type: object
+      additionalProperties: false
+      required: [data, meta]
+      properties:
+        data: {type: array, items: {$ref: '#/components/schemas/Aoi'}}
+        meta: {$ref: '#/components/schemas/PaginationMeta'}
+
+    Satellite:
+      type: object
+      additionalProperties: false
+      required: [id, name, norad_catalog_id, platform, status, omm_epoch, omm_age_seconds, provenance_id]
+      properties:
+        id: {type: string}
+        name: {type: string}
+        norad_catalog_id: {type: integer, minimum: 1}
+        platform: {type: string, enum: [sentinel-2a, sentinel-2b, sentinel-2c]}
+        status: {type: string, enum: [operational-observed, catalogued, stale, retired]}
+        omm_epoch: {$ref: '#/components/schemas/Timestamp'}
+        omm_age_seconds: {type: number}
+        provenance_id: {type: string}
+
+    SatellitePage:
+      type: object
+      additionalProperties: false
+      required: [data, meta]
+      properties:
+        data: {type: array, items: {$ref: '#/components/schemas/Satellite'}}
+        meta: {$ref: '#/components/schemas/PaginationMeta'}
+
+    TrajectorySample:
+      type: object
+      additionalProperties: false
+      required: [time, latitude, longitude, altitude_m, swath_left, swath_right]
+      properties:
+        time: {$ref: '#/components/schemas/Timestamp'}
+        latitude: {type: number, minimum: -90, maximum: 90}
+        longitude: {type: number, minimum: -180, maximum: 180}
+        altitude_m: {type: number, minimum: 0}
+        swath_left: {$ref: '#/components/schemas/Position'}
+        swath_right: {$ref: '#/components/schemas/Position'}
+
+    Trajectory:
+      type: object
+      additionalProperties: false
+      required: [satellite_id, frame, sample_interval_seconds, start_time, end_time, samples, algorithm_version, provenance_id]
+      properties:
+        satellite_id: {type: string}
+        frame: {type: string, const: ITRS/WGS84 geodetic}
+        sample_interval_seconds: {type: integer, minimum: 1}
+        start_time: {$ref: '#/components/schemas/Timestamp'}
+        end_time: {$ref: '#/components/schemas/Timestamp'}
+        samples: {type: array, minItems: 2, items: {$ref: '#/components/schemas/TrajectorySample'}}
+        algorithm_version: {type: string}
+        provenance_id: {type: string}
+
+    Subpoint:
+      type: object
+      additionalProperties: false
+      required: [latitude, longitude, altitude_m]
+      properties:
+        latitude: {type: number}
+        longitude: {type: number}
+        altitude_m: {type: number}
+
+    OpportunitySource:
+      type: object
+      additionalProperties: true
+      required: [omm_epoch, omm_sha256, propagation_model, coarse_step_seconds, crossing_tolerance_seconds]
+      properties:
+        omm_epoch: {$ref: '#/components/schemas/Timestamp'}
+        omm_sha256: {type: string, pattern: '^[a-f0-9]{64}$'}
+        propagation_model: {type: string, const: SGP4}
+        coarse_step_seconds: {type: integer}
+        crossing_tolerance_seconds: {type: number}
+
+    Opportunity:
+      type: object
+      additionalProperties: false
+      required: [id, kind, aoi_id, satellite_id, platform, entry_time, closest_time, exit_time, duration_seconds, direction, satellite_sunlit, aoi_sun_elevation_deg, illumination, element_age_seconds, swath_width_km, swath_footprint, minimum_ground_track_distance_km, closest_subpoint, acquisition_status, caveat, source, provenance_id]
+      properties:
+        id: {type: string}
+        kind: {type: string, const: geometric_opportunity}
+        aoi_id: {type: string}
+        satellite_id: {type: string}
+        platform: {type: string}
+        entry_time: {$ref: '#/components/schemas/Timestamp'}
+        closest_time: {$ref: '#/components/schemas/Timestamp'}
+        exit_time: {$ref: '#/components/schemas/Timestamp'}
+        duration_seconds: {type: number, minimum: 0}
+        direction: {type: string, enum: [descending, ascending]}
+        satellite_sunlit: {type: boolean}
+        aoi_sun_elevation_deg: {type: number, minimum: -90, maximum: 90}
+        illumination: {type: string, enum: [daylight, low_sun]}
+        element_age_seconds: {type: number}
+        swath_width_km: {type: number, exclusiveMinimum: 0}
+        swath_footprint: {$ref: '#/components/schemas/GeoJsonGeometry'}
+        minimum_ground_track_distance_km: {type: number, minimum: 0}
+        closest_subpoint: {$ref: '#/components/schemas/Subpoint'}
+        acquisition_status: {type: string, enum: [unknown, observed, not_observed]}
+        matched_scene_id: {type: [string, 'null']}
+        truncated: {type: boolean, default: false}
+        caveat: {type: string}
+        source: {$ref: '#/components/schemas/OpportunitySource'}
+        provenance_id: {type: string}
+
+    OpportunityPage:
+      type: object
+      additionalProperties: false
+      required: [data, meta]
+      properties:
+        data: {type: array, items: {$ref: '#/components/schemas/Opportunity'}}
+        meta: {$ref: '#/components/schemas/OpportunityPageMeta'}
+
+    OpportunityPageMeta:
+      type: object
+      additionalProperties: false
+      required: [count, next_cursor, as_of, window_start, window_end]
+      properties:
+        count: {type: integer, minimum: 0}
+        next_cursor: {type: [string, 'null']}
+        as_of: {$ref: '#/components/schemas/Timestamp'}
+        window_start:
+          allOf: [{$ref: '#/components/schemas/Timestamp'}]
+          description: Inclusive start shared with the likelihood horizons for the default request.
+        window_end:
+          allOf: [{$ref: '#/components/schemas/Timestamp'}]
+          description: Exclusive end shared with the 14-day likelihood horizon for the default request.
+
+    SceneAnalysisState:
+      type: string
+      enum: [queued, reading, analysing, ready, failed, not_recorded]
+
+    ThumbnailStatus:
+      type: string
+      enum: [ready, pending, not_bundled, failed]
+
+    ArchiveState:
+      type: string
+      enum: [searching, ready, empty, not_recorded, failed]
+
+    ScenePageMeta:
+      type: object
+      additionalProperties: false
+      required: [count, next_cursor, as_of, archive_state, window_start, window_end]
+      properties:
+        count: {type: integer, minimum: 0}
+        next_cursor: {type: [string, 'null']}
+        as_of: {$ref: '#/components/schemas/Timestamp'}
+        archive_state: {$ref: '#/components/schemas/ArchiveState'}
+        window_start: {$ref: '#/components/schemas/Timestamp'}
+        window_end: {$ref: '#/components/schemas/Timestamp'}
+
+    SceneSummary:
+      type: object
+      required: [id, collection, platform, acquisition_time, tile, footprint, stac_self_url, analysis_state, analysis_error, aoi_coverage_percent, tile_cloud_cover_percent, aoi_clear_percent, valid_pixels, thumbnail_status, thumbnail_url, statistics_url, provenance_id]
+      properties:
+        id: {type: string}
+        collection: {type: string, const: sentinel-2-l2a}
+        platform: {type: string}
+        acquisition_time: {$ref: '#/components/schemas/Timestamp'}
+        tile: {type: string}
+        footprint: {$ref: '#/components/schemas/GeoJsonGeometry'}
+        stac_self_url: {type: string, format: uri}
+        analysis_state: {$ref: '#/components/schemas/SceneAnalysisState'}
+        analysis_error:
+          oneOf: [{$ref: '#/components/schemas/ErrorObject'}, {type: 'null'}]
+        aoi_coverage_percent: {type: [number, 'null'], minimum: 0, maximum: 100}
+        tile_cloud_cover_percent: {type: [number, 'null'], minimum: 0, maximum: 100}
+        aoi_clear_percent: {type: [number, 'null'], minimum: 0, maximum: 100}
+        valid_pixels: {type: [integer, 'null'], minimum: 0}
+        thumbnail_status: {$ref: '#/components/schemas/ThumbnailStatus'}
+        thumbnail_url: {type: [string, 'null'], format: uri-reference}
+        statistics_url: {type: [string, 'null'], format: uri-reference}
+        provenance_id: {type: string}
+
+    Scene:
+      allOf:
+        - $ref: '#/components/schemas/SceneSummary'
+        - type: object
+          required: [assets]
+          properties:
+            assets:
+              type: object
+              required: [scl, visual]
+              properties:
+                scl: {type: string, format: uri}
+                visual: {type: string, format: uri}
+      unevaluatedProperties: false
+
+    ScenePage:
+      type: object
+      additionalProperties: false
+      required: [data, meta]
+      properties:
+        data: {type: array, items: {$ref: '#/components/schemas/SceneSummary'}}
+        meta: {$ref: '#/components/schemas/ScenePageMeta'}
+
+    ClassCount:
+      type: object
+      additionalProperties: false
+      required: [label, pixels]
+      properties:
+        label: {type: string}
+        pixels: {type: integer, minimum: 0}
+
+    SurfaceClassPolicy:
+      type: object
+      additionalProperties: false
+      required: [surface_scl_classes, snow_ice_counted_as_surface]
+      properties:
+        surface_scl_classes:
+          type: array
+          description: Sentinel-2 SCL values counted as clear surface for this area.
+          items: {type: integer, minimum: 0, maximum: 11}
+          minItems: 1
+          uniqueItems: true
+        snow_ice_counted_as_surface:
+          type: boolean
+          description: True when SCL 11 is included because snow or ice is the area subject.
+
+    RasterStatistics:
+      type: object
+      additionalProperties: false
+      required: [scene_id, aoi_id, algorithm_version, clear_percent, valid_coverage_percent, clear_pixels, valid_pixels, inside_aoi_pixels, invalid_pixels, clear_scl_classes, valid_scl_classes, surface_class_policy, class_counts, source_resolution_m, overview_factor, computed_at, provenance_id]
+      properties:
+        scene_id: {type: string}
+        aoi_id: {type: string}
+        algorithm_version: {type: string}
+        clear_percent: {type: [number, 'null'], minimum: 0, maximum: 100}
+        valid_coverage_percent: {type: number, minimum: 0, maximum: 100}
+        clear_pixels: {type: integer, minimum: 0}
+        valid_pixels: {type: integer, minimum: 0}
+        inside_aoi_pixels: {type: integer, minimum: 0}
+        invalid_pixels: {type: integer, minimum: 0}
+        clear_scl_classes: {type: array, items: {type: integer}, minItems: 1}
+        valid_scl_classes: {type: array, items: {type: integer}, minItems: 1}
+        surface_class_policy: {$ref: '#/components/schemas/SurfaceClassPolicy'}
+        class_counts:
+          type: object
+          additionalProperties: {$ref: '#/components/schemas/ClassCount'}
+        source_resolution_m: {type: number, exclusiveMinimum: 0}
+        overview_factor: {type: integer, minimum: 1}
+        computed_at: {$ref: '#/components/schemas/Timestamp'}
+        provenance_id: {type: string}
+
+    ThumbnailMetadata:
+      type: object
+      additionalProperties: false
+      required: [scene_id, aoi_id, url, media_type, width, height, byte_length, sha256, transparent_outside_aoi, provenance_id]
+      properties:
+        scene_id: {type: string}
+        aoi_id: {type: string}
+        url: {type: string, format: uri-reference}
+        media_type: {type: string, const: image/png}
+        width: {type: integer, minimum: 1}
+        height: {type: integer, minimum: 1}
+        byte_length: {type: integer, minimum: 1}
+        sha256: {type: string, pattern: '^[a-f0-9]{64}$'}
+        transparent_outside_aoi: {type: boolean}
+        provenance_id: {type: string}
+
+    CredibleInterval:
+      type: object
+      additionalProperties: false
+      required: [level, lower, upper]
+      properties:
+        level: {type: number, exclusiveMinimum: 0, exclusiveMaximum: 1}
+        lower: {type: number, minimum: 0, maximum: 1}
+        upper: {type: number, minimum: 0, maximum: 1}
+
+    HorizonLikelihood:
+      type: object
+      additionalProperties: false
+      required: [days, opportunity_days, opportunity_count, probability, credible_interval]
+      properties:
+        days: {type: integer, enum: [7, 14]}
+        opportunity_days: {type: integer, minimum: 0}
+        opportunity_count: {type: integer, minimum: 0}
+        probability: {type: [number, 'null'], minimum: 0, maximum: 1}
+        credible_interval:
+          oneOf: [{$ref: '#/components/schemas/CredibleInterval'}, {type: 'null'}]
+
+    BetaPosterior:
+      type: object
+      additionalProperties: false
+      required: [distribution, prior_alpha, prior_beta, alpha, beta, sample_size, success_count, failure_count, excluded_count]
+      properties:
+        distribution: {type: string, const: Beta}
+        prior_alpha: {type: number, exclusiveMinimum: 0}
+        prior_beta: {type: number, exclusiveMinimum: 0}
+        alpha: {type: number, exclusiveMinimum: 0}
+        beta: {type: number, exclusiveMinimum: 0}
+        sample_size: {type: integer, minimum: 0}
+        success_count: {type: integer, minimum: 0}
+        failure_count: {type: integer, minimum: 0}
+        excluded_count: {type: integer, minimum: 0}
+
+    TrialEvidence:
+      type: object
+      additionalProperties: false
+      required: [opportunity_id, date, usable, reason]
+      properties:
+        opportunity_id: {type: string}
+        date: {type: string, format: date}
+        usable: {type: boolean}
+        reason: {type: string}
+        scene_id: {type: string}
+        clear_percent: {type: number, minimum: 0, maximum: 100}
+
+    ExcludedEvidence:
+      type: object
+      additionalProperties: false
+      required: [opportunity_id, reason]
+      properties:
+        opportunity_id: {type: string}
+        reason: {type: string}
+
+    Likelihood:
+      type: object
+      additionalProperties: false
+      required: [aoi_id, as_of, computed_at, window_start, window_end, history_start, history_end, interpretation, usable_definition, surface_class_policy, season, acquisition_posterior, clear_posterior, horizons, monte_carlo, quality, trial_evidence, excluded_evidence, provenance_id]
+      properties:
+        aoi_id: {type: string}
+        as_of: {$ref: '#/components/schemas/Timestamp'}
+        computed_at: {$ref: '#/components/schemas/Timestamp'}
+        window_start:
+          allOf: [{$ref: '#/components/schemas/Timestamp'}]
+          description: Inclusive start for every likelihood horizon.
+        window_end:
+          allOf: [{$ref: '#/components/schemas/Timestamp'}]
+          description: Exclusive end of the 14-day horizon and default opportunity list.
+        history_start: {$ref: '#/components/schemas/Timestamp'}
+        history_end: {$ref: '#/components/schemas/Timestamp'}
+        interpretation: {type: string}
+        usable_definition: {type: object, additionalProperties: true}
+        surface_class_policy: {$ref: '#/components/schemas/SurfaceClassPolicy'}
+        season: {type: object, additionalProperties: true}
+        acquisition_posterior: {$ref: '#/components/schemas/BetaPosterior'}
+        clear_posterior: {$ref: '#/components/schemas/BetaPosterior'}
+        horizons: {type: array, minItems: 2, maxItems: 2, items: {$ref: '#/components/schemas/HorizonLikelihood'}}
+        monte_carlo: {type: object, additionalProperties: true}
+        quality: {type: string, enum: [seasonal, all-season-fallback, tile-fallback, insufficient-data, demo-only-sparse]}
+        trial_evidence: {type: array, items: {$ref: '#/components/schemas/TrialEvidence'}}
+        excluded_evidence: {type: array, items: {$ref: '#/components/schemas/ExcludedEvidence'}}
+        provenance_id: {type: string}
+
+    ProvenanceNode:
+      type: object
+      required: [id, kind, label, source_id, request_key_sha256, fixture_interaction_id, available_offline]
+      properties:
+        id: {type: string}
+        kind: {type: string, enum: [raw_input, derived, request, algorithm, geometry]}
+        label: {type: string}
+        source_id:
+          type: [string, 'null']
+          enum: [celestrak, earth-search, sentinel-cogs, jpl-de421, null]
+        request_key_sha256: {type: [string, 'null'], pattern: '^[a-f0-9]{64}$'}
+        fixture_interaction_id: {type: [string, 'null']}
+        available_offline: {type: boolean}
+        origin:
+          type: [string, 'null']
+          enum: [network, cache, fixture, null]
+        sha256: {type: [string, 'null'], pattern: '^[a-f0-9]{64}$'}
+        source_url: {type: [string, 'null'], format: uri}
+        fetched_at:
+          oneOf: [{$ref: '#/components/schemas/Timestamp'}, {type: 'null'}]
+        algorithm_version: {type: [string, 'null']}
+      additionalProperties: true
+
+    ProvenanceEdge:
+      type: object
+      additionalProperties: false
+      required: [from, to, relation]
+      properties:
+        from: {type: string}
+        to: {type: string}
+        relation: {type: string, enum: [input_to, generated_by, describes, derived_from]}
+
+    ProvenanceGraph:
+      type: object
+      additionalProperties: false
+      required: [id, root_artifact_id, created_at, nodes, edges]
+      properties:
+        id: {type: string}
+        root_artifact_id: {type: string}
+        created_at: {$ref: '#/components/schemas/Timestamp'}
+        nodes: {type: array, items: {$ref: '#/components/schemas/ProvenanceNode'}}
+        edges: {type: array, items: {$ref: '#/components/schemas/ProvenanceEdge'}}
+
+    JobState:
+      type: string
+      enum: [queued, running, succeeded, failed, cancelled]
+
+    JobType:
+      type: string
+      enum: [full_analysis, orbit_only, archive_refresh, raster_scene, likelihood_only]
+
+    JobStage:
+      type: string
+      enum: [catalogue, orbit, archive, raster, likelihood, finalise]
+
+    AnalysisJobCreate:
+      type: object
+      additionalProperties: false
+      required: [type]
+      properties:
+        type: {$ref: '#/components/schemas/JobType'}
+        aoi_id: {type: string}
+        scene_id: {type: string}
+        from: {$ref: '#/components/schemas/Timestamp'}
+        to: {$ref: '#/components/schemas/Timestamp'}
+        force_refresh: {type: boolean, default: false}
+      anyOf:
+        - required: [aoi_id]
+        - required: [scene_id]
+
+    JobResult:
+      type: object
+      additionalProperties: true
+      properties:
+        opportunity_count: {type: integer, minimum: 0}
+        scene_count: {type: integer, minimum: 0}
+        likelihood_url: {type: string, format: uri-reference}
+
+    AnalysisJob:
+      type: object
+      additionalProperties: false
+      required: [id, type, state, progress, stage, created_at, result, error, events_url]
+      properties:
+        id: {type: string}
+        type: {$ref: '#/components/schemas/JobType'}
+        aoi_id: {type: [string, 'null']}
+        scene_id: {type: [string, 'null']}
+        state: {$ref: '#/components/schemas/JobState'}
+        progress: {type: number, minimum: 0, maximum: 1}
+        stage: {$ref: '#/components/schemas/JobStage'}
+        created_at: {$ref: '#/components/schemas/Timestamp'}
+        started_at:
+          oneOf: [{$ref: '#/components/schemas/Timestamp'}, {type: 'null'}]
+        finished_at:
+          oneOf: [{$ref: '#/components/schemas/Timestamp'}, {type: 'null'}]
+        cancel_requested_at:
+          oneOf: [{$ref: '#/components/schemas/Timestamp'}, {type: 'null'}]
+        result:
+          oneOf: [{$ref: '#/components/schemas/JobResult'}, {type: 'null'}]
+        error:
+          oneOf: [{$ref: '#/components/schemas/ErrorObject'}, {type: 'null'}]
+        events_url: {type: string, format: uri-reference}
+
+    JobPage:
+      type: object
+      additionalProperties: false
+      required: [data, meta]
+      properties:
+        data: {type: array, items: {$ref: '#/components/schemas/AnalysisJob'}}
+        meta: {$ref: '#/components/schemas/PaginationMeta'}
+
+    Health:
+      type: object
+      additionalProperties: false
+      required: [status, version, mode, clock, database, cache, upstreams]
+      properties:
+        status: {type: string, enum: [ok, degraded, unavailable]}
+        version: {type: string}
+        mode: {type: string, enum: [live, replay]}
+        clock: {$ref: '#/components/schemas/Timestamp'}
+        database: {type: string, enum: [ok, degraded, unavailable]}
+        cache: {type: string, enum: [ok, degraded, unavailable]}
+        upstreams:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/UpstreamHealth'
+
+    UpstreamHealth:
+      type: object
+      additionalProperties: false
+      required: [status, last_success_at, reason]
+      properties:
+        status: {type: string, enum: [ok, stale, unavailable, fixture, disabled]}
+        last_success_at:
+          oneOf: [{$ref: '#/components/schemas/Timestamp'}, {type: 'null'}]
+        reason: {type: [string, 'null']}
+
+    Mode:
+      type: object
+      additionalProperties: false
+      required: [mode, clock, network_enabled, live_available, fixture_set, fixture_recorded_at, deterministic]
+      properties:
+        mode: {type: string, enum: [live, replay]}
+        clock: {$ref: '#/components/schemas/Timestamp'}
+        network_enabled: {type: boolean}
+        live_available: {type: boolean}
+        fixture_set: {type: [string, 'null']}
+        fixture_recorded_at:
+          oneOf: [{$ref: '#/components/schemas/Timestamp'}, {type: 'null'}]
+        deterministic: {type: boolean}
+
+    ModeSwitchRequest:
+      type: object
+      additionalProperties: false
+      required: [mode]
+      properties:
+        mode: {type: string, enum: [live, replay]}
+        fixture_set: {type: string}
+
+    Attribution:
+      type: object
+      additionalProperties: false
+      required: [source, display_text, source_url, terms_url]
+      properties:
+        source: {type: string}
+        display_text: {type: string}
+        source_url: {type: string, format: uri}
+        terms_url: {type: string, format: uri}
+
+    AttributionList:
+      type: object
+      additionalProperties: false
+      required: [data]
+      properties:
+        data:
+          type: array
+          minItems: 3
+          items: {$ref: '#/components/schemas/Attribution'}
+
+    ErrorObject:
+      type: object
+      additionalProperties: false
+      required: [code, message, retryable, details, request_id]
+      properties:
+        code: {type: string, pattern: '^[A-Z][A-Z0-9_]+$'}
+        message: {type: string}
+        retryable: {type: boolean}
+        details: {type: object, additionalProperties: true}
+        request_id: {type: string}
+
+    ErrorResponse:
+      type: object
+      additionalProperties: false
+      required: [error]
+      properties:
+        error: {$ref: '#/components/schemas/ErrorObject'}

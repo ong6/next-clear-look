@@ -1,0 +1,73 @@
+{
+  "data": [
+    {
+      "acquisition_status": "unknown",
+      "aoi_id": "aoi_sg_tuas_coast",
+      "aoi_sun_elevation_deg": 53.82,
+      "caveat": "Geometric opportunity only; acquisition is not guaranteed.",
+      "closest_subpoint": {
+        "altitude_m": 786122.4,
+        "latitude": 1.01,
+        "longitude": 103.78
+      },
+      "closest_time": "2026-10-03T02:32:07.250000Z",
+      "direction": "descending",
+      "duration_seconds": 94.35,
+      "element_age_seconds": 36009.666896,
+      "entry_time": "2026-10-03T02:31:20.100000Z",
+      "exit_time": "2026-10-03T02:32:54.450000Z",
+      "id": "opp_ef8b898f1dfb",
+      "illumination": "daylight",
+      "kind": "geometric_opportunity",
+      "matched_scene_id": null,
+      "minimum_ground_track_distance_km": 37.41,
+      "platform": "sentinel-2c",
+      "provenance_id": "prv_opp_ef8b898f1dfb",
+      "satellite_id": "sentinel-2c",
+      "satellite_sunlit": true,
+      "source": {
+        "coarse_step_seconds": 20,
+        "crossing_tolerance_seconds": 0.05,
+        "omm_epoch": "2026-10-02T16:31:57.583104Z",
+        "omm_sha256": "7368f1805ce51fdd4acb5a1226ce40465d22a2589967c4e555ac243492abf844",
+        "propagation_model": "SGP4"
+      },
+      "swath_footprint": {
+        "coordinates": [
+          [
+            [
+              102.35,
+              -0.25
+            ],
+            [
+              105.03,
+              -0.25
+            ],
+            [
+              105.03,
+              2.85
+            ],
+            [
+              102.35,
+              2.85
+            ],
+            [
+              102.35,
+              -0.25
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "swath_width_km": 290.0,
+      "truncated": false
+    }
+  ],
+  "meta": {
+    "as_of": "2026-10-03T00:00:00Z",
+    "count": 1,
+    "next_cursor": null,
+    "window_end": "2026-10-17T00:00:00Z",
+    "window_start": "2026-10-03T00:00:00Z"
+  }
+}

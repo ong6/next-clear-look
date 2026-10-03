@@ -1,0 +1,43 @@
+{
+  "$id": "https://next-clear-look.local/schemas/events/live.clock.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "allOf": [
+    {
+      "$ref": "envelope.schema.json"
+    },
+    {
+      "properties": {
+        "data": {
+          "additionalProperties": false,
+          "properties": {
+            "paused": {
+              "type": "boolean"
+            },
+            "speed": {
+              "minimum": 0,
+              "type": "number"
+            }
+          },
+          "required": [
+            "speed",
+            "paused"
+          ],
+          "type": "object"
+        },
+        "stream": {
+          "const": "live"
+        },
+        "type": {
+          "const": "live.clock"
+        }
+      },
+      "required": [
+        "type",
+        "stream",
+        "data"
+      ],
+      "type": "object"
+    }
+  ],
+  "title": "Next Clear Look live.clock event"
+}

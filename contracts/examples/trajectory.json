@@ -1,0 +1,53 @@
+{
+  "algorithm_version": "sgp4-swath-v1",
+  "end_time": "2026-10-03T02:33:00Z",
+  "frame": "ITRS/WGS84 geodetic",
+  "provenance_id": "prv_trajectory_s2c_20261003",
+  "sample_interval_seconds": 60,
+  "samples": [
+    {
+      "altitude_m": 786201.2,
+      "latitude": 5.13,
+      "longitude": 102.98,
+      "swath_left": [
+        101.67,
+        5.11
+      ],
+      "swath_right": [
+        104.29,
+        5.14
+      ],
+      "time": "2026-10-03T02:31:00Z"
+    },
+    {
+      "altitude_m": 786132.1,
+      "latitude": 1.55,
+      "longitude": 103.69,
+      "swath_left": [
+        102.39,
+        1.54
+      ],
+      "swath_right": [
+        104.99,
+        1.56
+      ],
+      "time": "2026-10-03T02:32:00Z"
+    },
+    {
+      "altitude_m": 786087.7,
+      "latitude": -2.04,
+      "longitude": 104.39,
+      "swath_left": [
+        103.09,
+        -2.06
+      ],
+      "swath_right": [
+        105.69,
+        -2.02
+      ],
+      "time": "2026-10-03T02:33:00Z"
+    }
+  ],
+  "satellite_id": "sentinel-2c",
+  "start_time": "2026-10-03T02:31:00Z"
+}

@@ -1,0 +1,24 @@
+{
+  "bbox": [103.62, 1.24, 103.77, 1.36],
+  "geometry": {
+    "coordinates": [
+      [
+        [103.62, 1.24],
+        [103.77, 1.24],
+        [103.77, 1.36],
+        [103.62, 1.36],
+        [103.62, 1.24]
+      ]
+    ],
+    "type": "Polygon"
+  },
+  "id": "aoi_sg_tuas_coast",
+  "properties": {
+    "climate_tags": ["equatorial-humidity", "haze", "frequent-partial-cloud"],
+    "locality": "Singapore",
+    "name": "Tuas reclamation edge",
+    "slug": "singapore-coast",
+    "story": "Rapidly evolving port and reclamation geometry makes recent clear evidence tangible."
+  },
+  "type": "Feature"
+}

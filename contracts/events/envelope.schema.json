@@ -1,0 +1,124 @@
+{
+  "$id": "https://next-clear-look.local/schemas/events/envelope.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "stream": {
+            "const": "job"
+          }
+        },
+        "required": [
+          "stream"
+        ]
+      },
+      "then": {
+        "required": [
+          "job_id"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "stream": {
+            "const": "live"
+          }
+        },
+        "required": [
+          "stream"
+        ]
+      },
+      "then": {
+        "not": {
+          "required": [
+            "job_id"
+          ]
+        }
+      }
+    }
+  ],
+  "properties": {
+    "clock_time": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "data": {
+      "type": "object"
+    },
+    "emitted_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "id": {
+      "maxLength": 200,
+      "minLength": 1,
+      "type": "string"
+    },
+    "job_id": {
+      "pattern": "^job_[A-Za-z0-9_-]+$",
+      "type": "string"
+    },
+    "mode": {
+      "enum": [
+        "live",
+        "replay"
+      ],
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0"
+    },
+    "sequence": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "stream": {
+      "enum": [
+        "job",
+        "live"
+      ],
+      "type": "string"
+    },
+    "type": {
+      "enum": [
+        "job.accepted",
+        "job.started",
+        "job.cancellation_requested",
+        "job.stage.started",
+        "job.progress",
+        "job.result",
+        "job.warning",
+        "job.stage.completed",
+        "job.completed",
+        "job.failed",
+        "job.cancelled",
+        "live.clock",
+        "live.satellite_positions",
+        "live.opportunity.entered",
+        "live.opportunity.closest",
+        "live.opportunity.exited",
+        "live.scene.available",
+        "live.upstream.status",
+        "live.mode.changed",
+        "stream.reset_required"
+      ],
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "sequence",
+    "type",
+    "stream",
+    "emitted_at",
+    "mode",
+    "clock_time",
+    "schema_version",
+    "data"
+  ],
+  "title": "Next Clear Look SSE envelope",
+  "type": "object"
+}

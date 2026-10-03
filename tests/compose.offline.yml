@@ -1,0 +1,13 @@
+services:
+  engine:
+    environment:
+      ALL_PROXY: http://127.0.0.1:9
+      HTTP_PROXY: http://127.0.0.1:9
+      HTTPS_PROXY: http://127.0.0.1:9
+      NO_PROXY: 127.0.0.1,localhost,web,engine
+  web:
+    environment:
+      ALL_PROXY: http://127.0.0.1:9
+      HTTP_PROXY: http://127.0.0.1:9
+      HTTPS_PROXY: http://127.0.0.1:9
+      NO_PROXY: 127.0.0.1,localhost,web,engine
