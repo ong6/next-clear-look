@@ -27,7 +27,7 @@ jobs:
         with:
           python-version: "3.12"
       - uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061
-      - uses: actions/setup-node@1e60f620b9541d1603c39534d3a2b7b639f1a590
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version-file: .nvmrc
           cache: pnpm
