@@ -102,15 +102,13 @@ async def test_pinned_teme_reference_vector_uses_sgp4_error_position_velocity_or
     propagator = OrbitPropagator()
     propagator.install(records)
     vectors = reference_vectors(propagator, "sentinel-2a", NOW)
-    assert vectors["teme_position_km"] == (
-        -3597.5478805783423,
-        -267.749715505227,
-        6185.589629020584,
+    # The last bits of SGP4's floating-point output differ between platforms, so the pin
+    # allows a micrometre in position and a nanometre per second in velocity.
+    assert vectors["teme_position_km"] == pytest.approx(
+        (-3597.5478805783423, -267.749715505227, 6185.589629020584), abs=1e-9
     )
-    assert vectors["teme_velocity_km_s"] == (
-        -6.306370836954031,
-        1.7428948628426149,
-        -3.584413088059598,
+    assert vectors["teme_velocity_km_s"] == pytest.approx(
+        (-6.306370836954031, 1.7428948628426149, -3.584413088059598), abs=1e-12
     )
 
 

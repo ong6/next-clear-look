@@ -1,9 +1,15 @@
 #!/usr/bin/env python3
-"""Run G1-G17 in order and retain a one-line result for every gate."""
+"""Run G1-G17 in order and retain a one-line result for every gate.
+
+With --no-gpu, the browser gates (G12-G16) are reported as skipped: they render a WebGL globe
+and need hardware WebGL, which GPU-less CI runners lack. Run plain `make ci` on a workstation
+for the full set.
+"""
 
 from __future__ import annotations
 
 import subprocess
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -28,9 +34,16 @@ GATES = (
 )
 
 
+BROWSER_GATES = {"G12", "G13", "G14", "G15", "G16"}
+
+
 def main() -> int:
+    no_gpu = "--no-gpu" in sys.argv[1:]
     failures = 0
     for gate, targets in GATES:
+        if no_gpu and gate in BROWSER_GATES:
+            print(f"{gate} SKIP {'+'.join(targets)} (needs hardware WebGL)", flush=True)
+            continue
         returncodes = [
             subprocess.run(
                 ["make", "--no-print-directory", target], cwd=ROOT, check=False

@@ -11,7 +11,7 @@ NCL_CHROMIUM_USE_METAL ?= $(if $(filter Darwin,$(shell uname -s)),1,0)
 .PHONY: help bootstrap bootstrap-test dev live stop repo-check contract-check engine-static
 .PHONY: engine-unit engine-coverage engine-property engine-golden golden-update fixtures-record fixtures-diff
 .PHONY: fixtures-check offline-check api-contract web-check integration e2e-desktop e2e-mobile
-.PHONY: screenshots-check screenshots-update a11y perf perf-local compose-smoke ci
+.PHONY: screenshots-check screenshots-update a11y perf perf-local compose-smoke ci ci-no-gpu
 
 help:
 	@awk 'BEGIN {FS = ":.*## "} /^[a-zA-Z0-9_-]+:.*## / {printf "%-22s %s\n", $$1, $$2}' $(MAKEFILE_LIST)
@@ -153,3 +153,6 @@ compose-smoke: ## G17: build and smoke-test the production offline topology.
 
 ci: ## Run G1-G17 in order and print one result line per gate.
 	$(PY) tools/run_gates.py
+
+ci-no-gpu: ## Run every gate that does not need hardware WebGL (used by GitHub CI).
+	$(PY) tools/run_gates.py --no-gpu

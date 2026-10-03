@@ -176,6 +176,10 @@ make ci
 | G16 | `make perf` | Ready/LCP/CLS, endpoint latency and initial-JS budgets |
 | G17 | `make compose-smoke` | Production images and healthy offline smoke |
 
+GitHub's hosted runners have no GPU, so the CI workflow runs `make ci-no-gpu`: every gate except
+the five browser gates (G12–G16), which render the WebGL globe and need hardware WebGL. Run the
+full `make ci` on a workstation before a release.
+
 Frame rate and long tasks are GPU-sensitive, so they remain report-only measures:
 
 ```bash
