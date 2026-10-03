@@ -86,5 +86,9 @@ Every fix landed with a regression test that failed before it.
   which blocked recording for most of the day; it was amended to search back up to 72 hours.
 - A tight catalogue budget made the recorder shrink four presets to 2–8 km boxes; Rotterdam no
   longer contained Maasvlakte. The budget was raised and the presets re-recorded at 130–497 km².
+- The first GitHub CI run failed: one workflow step was pinned to an action commit that does not
+  exist, and the five browser gates timed out on GPU-less hosted runners. Every pin was verified
+  against GitHub, and CI now runs the twelve gates that need no GPU; the browser gates run with
+  `make ci` on a workstation.
 - Opus's own visual direction for the globe was not enough: it only became striking after a
   dedicated art-direction review that specified camera poses, materials and lighting values.
